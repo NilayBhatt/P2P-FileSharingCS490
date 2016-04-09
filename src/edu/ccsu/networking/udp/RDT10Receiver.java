@@ -38,13 +38,16 @@ public class RDT10Receiver extends Thread {
 
     public void deliverData(byte[] data) {
         String endPacket = new String(data);
-        if (endPacket.endsWith("\r\n'")) {
-            finalData += new String(data);
-            System.out.println("@@@ Receiver delivered packet with: '" +finalData + "'");
-            finalData = ""; // Resetting my whole 
+        endPacket = endPacket.replace("%", " ");
+        //if(endPacket.)
+        if (endPacket.endsWith("Nilay")) {
+            finalData += endPacket;
+
+            System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
+            finalData = "";  // Resetting whole data.
         } else {
             try {
-                finalData += new String(data);
+                finalData += endPacket;
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
@@ -58,6 +61,10 @@ public class RDT10Receiver extends Thread {
     public void run() {
         try {
             receivingSocket = new DatagramSocket(49000);
+            byte[] receiverack = "0".getBytes();
+            byte[] receiverack0 = "0".getBytes();
+            byte[] receiverack1 = "1".getBytes();
+            byte[] ackin = new byte[1];
             while (true) {
                 System.out.println("@@@ Receiver waiting for packet");
                 byte[] buf = new byte[128];
@@ -65,7 +72,27 @@ public class RDT10Receiver extends Thread {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 receivingSocket.receive(packet);
                 packetData = Arrays.copyOf(packet.getData(), packet.getLength());
-                deliverData(packetData);
+                System.out.println("Got Data: " + new String(packetData));
+                ackin[0] = packetData[packetData.length - 1];
+
+                if (new String(receiverack).equals(new String(ackin))) {
+
+                    DatagramPacket ack = new DatagramPacket(receiverack, receiverack.length, packet.getAddress(), packet.getPort());
+                    receivingSocket.send(ack);
+                    System.out.println("Receiver Sending Ack: " + new String(receiverack));
+
+                    if (new String(receiverack).equals("1")) {
+                        receiverack = receiverack0;
+                    } else {
+                        receiverack = receiverack1;
+                    }
+                    byte[] dataToBeDelivered = new byte[packetData.length - 1];
+                    System.arraycopy(packetData, 0, dataToBeDelivered, 0, packetData.length - 1);
+                    
+                    System.out.println("Delivering Data: " + new String(dataToBeDelivered));
+
+                    deliverData(dataToBeDelivered);
+                }
             }
         } catch (SocketTimeoutException e) {
             stopListening();

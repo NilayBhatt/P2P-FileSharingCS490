@@ -29,7 +29,10 @@ public class Main {
             sender.startSender(targetAdddress,49000);
             
             for (int i=0;i<10;i++){
-                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery \r\n'";
+                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery Nilay";
+                
+                //Hack for spaces.s
+                data = data.replace(" ", "%");
                 // Send the data
                 sender.rdtSend(data.getBytes());
                 

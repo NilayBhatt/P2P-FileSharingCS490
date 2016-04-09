@@ -2,10 +2,12 @@ package edu.ccsu.networking.udp;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import static java.lang.System.arraycopy;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -19,23 +21,23 @@ import java.util.List;
  * @author Chad Williams
  */
 public class RDT10Sender {
-
+    
     private int receiverPortNumber = 0;
     private DatagramSocket socket = null;
     private InetAddress internetAddress = null;
     private final int packetDataSize = 16;
     private final int checksumSize = 4;
-
+    
     public RDT10Sender() {
-
+        
     }
-
+    
     public void startSender(byte[] targetAddress, int receiverPortNumber) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
         internetAddress = InetAddress.getByAddress(targetAddress);
         this.receiverPortNumber = receiverPortNumber;
     }
-
+    
     public void stopSender() {
         if (socket != null) {
             socket.close();
@@ -63,33 +65,57 @@ public class RDT10Sender {
 //        
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
         int packetNumber = 0;
+        byte[] ack1 = "1".getBytes();
+        byte[] ack0 = "0".getBytes();
+        byte[] senderack = "0".getBytes();
+        byte[] ack = new byte[1];
+        
         while (byteStream.available() > 0) {
             byte[] packetData = new byte[packetDataSize];
             int bytesRead = byteStream.read(packetData);
             
-            if (bytesRead < packetData.length) {
+            if (bytesRead < packetData.length - 1) {
                 packetData = Arrays.copyOf(packetData, bytesRead);
             }
-            byte[] intbytes = ByteBuffer.allocate(4).putInt(5).array();
-            List<Byte> modData = new ArrayList<>();
+            //byte[] intbytes = ByteBuffer.allocate(4).putInt(5).array();
+            //List<Byte> modData = new ArrayList<>();       
+            System.arraycopy(senderack, 0, packetData, packetData.length - 1, senderack.length);
             
-            for (byte b : packetData) {
-                modData.add(b);
-            }
-            for (byte b : intbytes) {
-                modData.add(b);
-            }
-            //byte[] mod_packetData = (byte[])modData.toArray();
-            
-            
-            //System.out.println("### Sender sending packet(" + new String((packetNumber++) + ")") + ": '" + new String(packetData) + "'");
             DatagramPacket packet = new DatagramPacket(packetData, packetData.length, internetAddress, receiverPortNumber);
-            socket.setSoTimeout(10000);
-            socket.send(packet);
-            // Minor pause for easier visualization only
-            //Thread.sleep(1200);
 
+//            for (byte b : packetData) {
+//                modData.add(b);
+//            }
+//            for (byte b : intbytes) {
+//                modData.add(b);
+//            }
+            //byte[] mod_packetData = (byte[])modData.toArray();
+            System.out.println("### Sender sending packet: " + new String(packetData) + "'");
+            try {
+                socket.send(packet);
+                socket.setSoTimeout(100);
+                // Minor pause for easier visualization only
+                //Thread.sleep(1200);
+                DatagramPacket receiveack = new DatagramPacket(ack, ack.length);
+                socket.receive(receiveack);
+                byte[] receivingAck = receiveack.getData();
+                System.out.println("Got Ack From Receiver: " + new String(receivingAck));
+                if (new String(receivingAck).equals(new String(senderack))) {
+                    if (new String(senderack).equals("0")) {
+                        senderack = ack1;
+                    } else {
+                        senderack = ack0;
+                    }
+                }
+            } catch (SocketTimeoutException e) {
+                System.out.println("We got a time out for packet: " + new String(packet.getData()));
+                socket.send(packet);
+                socket.setSoTimeout(100);
+            }
+            
         }
-        System.out.println("### Sender done sending");
+        
+        System.out.println(
+                "### Sender done sending");
     }
 }
