@@ -15,11 +15,13 @@ package edu.ccsu.networking.udp;
 public class FileUpload {
 
     private String fileName = "";
+    private String songName = "";
     private int fileSize = 0;
     private int hostAddress = 0;
     private int hostPort = 0;
 
-    public FileUpload(String fileName, int fileSize, int hostAddress, int hostPort) {
+    public FileUpload(String songName, String fileName, int fileSize, int hostAddress, int hostPort) {
+        this.songName = songName;
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.hostAddress = hostAddress;
@@ -56,5 +58,13 @@ public class FileUpload {
     
     public void setFileName(String fileName){
         this.fileName = fileName;
+    }
+    
+    public String getSongName() {
+        return songName;
+    }
+    
+    public void setSongName(String songName){
+        this.songName = songName;
     }
 }

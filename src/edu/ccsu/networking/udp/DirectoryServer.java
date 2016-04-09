@@ -5,12 +5,7 @@
  */
 package edu.ccsu.networking.udp;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -18,25 +13,32 @@ import java.util.Map;
  */
 public class DirectoryServer {
 
-    private List<FileUpload> fileList;
-
+    HashMap<String, ArrayList<FileUpload>> fileList;
+    
     public DirectoryServer() {
     }
 
-    public boolean add(FileUpload file) {
-        if (fileList.isEmpty() || fileList == null) {
-            fileList = new ArrayList<>();
-            return fileList.add(file);
-        } else {
-            return fileList.add(file);
+    public ArrayList<FileUpload> add(FileUpload file) {
+        String songName = file.getSongName();
+        ArrayList<FileUpload> f = fileList.get(songName);
+        
+        //if f is null then no mapping exists for that songName so create one
+        if (f == null){
+            f = new ArrayList<>();
+            f.add(file);
+            return fileList.put(songName, f);
+        }
+        else{
+            f.add(file);
+            return fileList.put(songName, f);
         }
     }
     
-    public boolean remove(FileUpload file) {
-        return fileList.remove(file);
+    public  ArrayList<FileUpload> remove(FileUpload file) {
+        return fileList.remove(file.getSongName());
     }
-    public List<FileUpload> ListAll()  {
-        return fileList;
+    public Collection<ArrayList<FileUpload>> ListAll()  {
+        return fileList.values();
         
     }
     
