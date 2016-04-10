@@ -24,6 +24,9 @@ public class RDT10Receiver extends Thread {
     private DatagramSocket receivingSocket = null;
     private byte[] packetData;
     private String finalData = "";
+    private byte[] receiverack = "0".getBytes();
+    private final byte[] receiverack0 = "0".getBytes();
+    private final byte[] receiverack1 = "1".getBytes();
 
     public RDT10Receiver(String name, int port) {
         super(name);
@@ -40,17 +43,14 @@ public class RDT10Receiver extends Thread {
         String endPacket = new String(data);
         endPacket = endPacket.replace("%", " ");
         //if(endPacket.)
-        if (endPacket.endsWith("Nilay")) {
-            finalData += endPacket;
-
+        System.out.println("So Far we have Received: " + finalData);
+        finalData += endPacket;
+        if (finalData.endsWith("Nilay")) {
+            //finalData += endPacket;
             System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
-            finalData = "";  // Resetting whole data.
-        } else {
-            try {
-                finalData += endPacket;
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            }
+            // Resetting whole data to start listening again
+            finalData = "";
+            receiverack = receiverack0;
         }
     }
 
@@ -61,9 +61,7 @@ public class RDT10Receiver extends Thread {
     public void run() {
         try {
             receivingSocket = new DatagramSocket(49000);
-            byte[] receiverack = "0".getBytes();
-            byte[] receiverack0 = "0".getBytes();
-            byte[] receiverack1 = "1".getBytes();
+
             byte[] ackin = new byte[1];
             while (true) {
                 System.out.println("@@@ Receiver waiting for packet");
@@ -88,7 +86,7 @@ public class RDT10Receiver extends Thread {
                     }
                     byte[] dataToBeDelivered = new byte[packetData.length - 1];
                     System.arraycopy(packetData, 0, dataToBeDelivered, 0, packetData.length - 1);
-                    
+
                     System.out.println("Delivering Data: " + new String(dataToBeDelivered));
 
                     deliverData(dataToBeDelivered);

@@ -25,7 +25,7 @@ public class RDT10Sender {
     private int receiverPortNumber = 0;
     private DatagramSocket socket = null;
     private InetAddress internetAddress = null;
-    private final int packetDataSize = 16;
+    private final int packetDataSize = 15;
     private final int checksumSize = 4;
     
     public RDT10Sender() {
@@ -79,9 +79,10 @@ public class RDT10Sender {
             }
             //byte[] intbytes = ByteBuffer.allocate(4).putInt(5).array();
             //List<Byte> modData = new ArrayList<>();       
-            System.arraycopy(senderack, 0, packetData, packetData.length - 1, senderack.length);
+            //System.arraycopy(senderack, 0, packetData, packetData.length - 1, senderack.length);
+            byte [] modPacketData = addAckToData(senderack, packetData);
             
-            DatagramPacket packet = new DatagramPacket(packetData, packetData.length, internetAddress, receiverPortNumber);
+            DatagramPacket packet = new DatagramPacket(modPacketData, modPacketData.length, internetAddress, receiverPortNumber);
 
 //            for (byte b : packetData) {
 //                modData.add(b);
@@ -117,5 +118,14 @@ public class RDT10Sender {
         
         System.out.println(
                 "### Sender done sending");
+    }
+    
+    public byte[] addAckToData(byte[] ack, byte[] packet) {
+        byte[] packetData = new byte[packet.length +1];
+        for(int i = 0; i < packet.length ; i++) {
+            packetData[i] =packet[i]; 
+        }
+        packetData[packetData.length -1] = ack[0];
+        return packetData;
     }
 }
