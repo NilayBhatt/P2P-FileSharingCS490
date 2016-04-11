@@ -70,6 +70,9 @@ public class RDT10Sender {
         byte[] senderack = "0".getBytes();
         byte[] ack = new byte[1];
         
+        // Get a new timer for measuring RTT
+        Timer timer = new Timer();
+        
         while (byteStream.available() > 0) {
             byte[] packetData = new byte[packetDataSize];
             int bytesRead = byteStream.read(packetData);
@@ -94,13 +97,21 @@ public class RDT10Sender {
             try {
                 socket.send(packet);
                 socket.setSoTimeout(100);
+                // Start timer for getting elapsed time
+                timer.startTimer();
+                
                 // Minor pause for easier visualization only
                 //Thread.sleep(1200);
                 DatagramPacket receiveack = new DatagramPacket(ack, ack.length);
                 socket.receive(receiveack);
                 byte[] receivingAck = receiveack.getData();
+                
+// Stop timer for elapse time      
+//                timer.getTime()
                 System.out.println("Got Ack From Receiver: " + new String(receivingAck));
                 if (new String(receivingAck).equals(new String(senderack))) {
+                    // stop timer
+                    
                     if (new String(senderack).equals("0")) {
                         senderack = ack1;
                     } else {
@@ -108,9 +119,15 @@ public class RDT10Sender {
                     }
                 }
             } catch (SocketTimeoutException e) {
+                
+                // Stop timer for elapse time with timeout case
+                timer.timerTimeOut();
+
                 System.out.println("We got a time out for packet: " + new String(packet.getData()));
                 socket.send(packet);
-                socket.setSoTimeout(100);
+                // setSoTimeOut to new timeout interval                 
+                socket.setSoTimeout(Timer.longToInt(timer.getTimeOutInterval()));
+                timer.startTimer();              
             }
             
         }

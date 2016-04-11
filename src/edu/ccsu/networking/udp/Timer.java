@@ -12,9 +12,9 @@ import static java.lang.Math.ceil;
  *
  * @author Travis Moretz on 4/8/16
  * 
- * Timer class to run on separate thread
+ * Timer that starts and stops when packet is sent and ack is received. 
  */
-public class Timer extends Thread {
+public class Timer {
     
     private static final float BETA = 0.25f;        
     
@@ -24,24 +24,45 @@ public class Timer extends Thread {
     
     private static final int DEV_WEIGHT = 4;
     
-    private int timeOutInterval;
+    private long timeOutInterval;
     
-    private int sampleRTT;
+    private long sampleRTT;
     
-    private int estimatedRTT;
+    private long estimatedRTT;
     
     private float devRTT;
     
+    private long startTime;
+    
     public Timer() {
         // set up initial values
-        timeOutInterval = 2000;
-        estimatedRTT = 2000;
+        timeOutInterval = 1000;
+        estimatedRTT = 900;
         sampleRTT = estimatedRTT;
         devRTT = 0;
+        startTime = 0;
     }
     
-    public int updateTimeOutInterval() {
-       return this.timeOutInterval = (int) ceil(this.getEstimatedRTT() + 
+    public long getStartTime() {
+        return this.startTime;
+    }
+    
+    public void startTimer() {
+        this.startTime = System.currentTimeMillis();
+    }
+    
+    public void stopTimer() {
+        this.sampleRTT = (System.currentTimeMillis() - this.startTime);
+        this.startTime = 0;
+    }
+    
+    public void timerTimeOut() {
+        this.timeOutInterval = 2 * this.getTimeOutInterval();
+        
+    }
+    
+    public long updateTimeOutInterval() {
+       return this.timeOutInterval = (long) ceil(this.getEstimatedRTT() + 
                 (DEV_WEIGHT * this.devRTT));
     }
     
@@ -50,33 +71,33 @@ public class Timer extends Thread {
                 (BETA *  abs((float) this.sampleRTT - (float) this.estimatedRTT));
     }
     
-    public int updateEstimatedRTT() {
-        return this.estimatedRTT = (int) (ceil((ONE_MINUS_BETA) * 
+    public long updateEstimatedRTT() {
+        return this.estimatedRTT = (long) (ceil((ONE_MINUS_BETA) * 
                 (float)this.estimatedRTT)) + 
-                (int) (ceil((BETA) * (float) this.sampleRTT));
+                (long) (ceil((BETA) * (float) this.sampleRTT));
     }
 
-    public int getTimeOutInterval() {
+    public long getTimeOutInterval() {
         return timeOutInterval;
     }
 
-    public void setTimeOutInterval(int timeOutInterval) {
+    public void setTimeOutInterval(long timeOutInterval) {
         this.timeOutInterval = timeOutInterval;
     }
 
-    public int getSampleRTT() {
+    public long getSampleRTT() {
         return sampleRTT;
     }
 
-    public void setSampleRTT(int sampleRTT) {
+    public void setSampleRTT(long sampleRTT) {
         this.sampleRTT = sampleRTT;
     }
 
-    public int getEstimatedRTT() {
+    public long getEstimatedRTT() {
         return estimatedRTT;
     }
 
-    public void setEstimatedRTT(int estimatedRTT) {
+    public void setEstimatedRTT(long estimatedRTT) {
         this.estimatedRTT = estimatedRTT;
     }
 
@@ -89,6 +110,19 @@ public class Timer extends Thread {
     }
     
     
-    
+    /**
+     * Needed because system time for timer is long, and setSoTimeout takes int
+     * @param value
+     * @return intager value of the long passed in, or the max int value but this
+     * will probably never be need, but its here.
+     * @throws IllegalArgumentException 
+     */
+    public static int longToInt(long value) throws IllegalArgumentException  {
+    if (value > Integer.MAX_VALUE) {
+        return Integer.MAX_VALUE;
+    } else {
+        return (int) value;
+    }
+}  
     
 }

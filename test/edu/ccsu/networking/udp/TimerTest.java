@@ -11,10 +11,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.lang.Thread;
 
 /**
  *
  * @author Travis
+ * 
+ *  * testing done with values set to estRTT = sampRTT = timeOut = 2000 
  */
 public class TimerTest {
     
@@ -50,8 +53,8 @@ public class TimerTest {
     public void testUpdateTimeOutInterval() {
         System.out.println("updateTimeOutInterval");
         Timer instance = new Timer();
-        int expResult = 2000;
-        int result = instance.updateTimeOutInterval();
+        long expResult = 2000;
+        long result = instance.updateTimeOutInterval();
         assertEquals(expResult, result);
     }
     @Test
@@ -60,8 +63,8 @@ public class TimerTest {
         Timer instance = new Timer();
         instance.setDevRTT(0.63F);
         instance.setEstimatedRTT(1245);
-        int expResult = 1248;
-        int result = instance.updateTimeOutInterval();
+        long expResult = 1248;
+        long result = instance.updateTimeOutInterval();
         assertEquals(expResult, result);
     }
     /**
@@ -97,8 +100,8 @@ public class TimerTest {
         System.out.println("updateEstimatedRTT");
         // start value estimatedRTT=2000; sampleRTT=2000
         Timer instance = new Timer();
-        int expResult = 2000;
-        int result = instance.updateEstimatedRTT();
+        long expResult = 2000;
+        long result = instance.updateEstimatedRTT();
         assertEquals(expResult, result);
     }
     @Test
@@ -108,8 +111,8 @@ public class TimerTest {
         Timer instance = new Timer();
         instance.setEstimatedRTT(1200);
         instance.setSampleRTT(4500);
-        int expResult = 2025;
-        int result = instance.updateEstimatedRTT();
+        long expResult = 2025;
+        long result = instance.updateEstimatedRTT();
         assertEquals(expResult, result);
     }
 
@@ -117,18 +120,18 @@ public class TimerTest {
     public void testGetTimeOutInterval() {
         System.out.println("getTimeOutInterval");
         Timer instance = new Timer();
-        int expResult = 34567;
+        long expResult = 34567;
         instance.setTimeOutInterval(expResult);
-        int result = instance.getTimeOutInterval();
+        long result = instance.getTimeOutInterval();
         assertEquals(expResult, result);
     }
     @Test
     public void testGetTimeOutInterval2() {
         System.out.println("getTimeOutInterval");
         Timer instance = new Timer();
-        int expResult = 34567;
-        int notResult = 4567;
-        int result = instance.getTimeOutInterval();
+        long expResult = 34567;
+        long notResult = 4567;
+        long result = instance.getTimeOutInterval();
         assertNotEquals(notResult, result);
     }
 
@@ -138,7 +141,7 @@ public class TimerTest {
     @Test
     public void testSetTimeOutInterval() {
         System.out.println("setTimeOutInterval");
-        int timeOutInterval = 3456;
+        long timeOutInterval = 3456;
         Timer instance = new Timer();
         instance.setTimeOutInterval(timeOutInterval);
         assertEquals(timeOutInterval, instance.getTimeOutInterval());
@@ -146,8 +149,8 @@ public class TimerTest {
     @Test
     public void testSetTimeOutInterval2() {
         System.out.println("setTimeOutInterval");
-        int timeOutInterval = 3456;
-        int notInterval = 5636;
+        long timeOutInterval = 3456;
+        long notInterval = 5636;
         Timer instance = new Timer();
         instance.setTimeOutInterval(timeOutInterval);
         assertNotEquals(notInterval, instance.getTimeOutInterval());
@@ -160,8 +163,8 @@ public class TimerTest {
     public void testGetSampleRTT() {
         System.out.println("getSampleRTT");
         Timer instance = new Timer();
-        int expResult = 2000;
-        int result = instance.getSampleRTT();
+        long expResult = 2000;
+        long result = instance.getSampleRTT();
         assertEquals(expResult, result);
         
     }
@@ -169,8 +172,8 @@ public class TimerTest {
     public void testGetSampleRTT2() {
         System.out.println("getSampleRTT");
         Timer instance = new Timer();
-        int expResult = 3000;
-        int result = instance.getSampleRTT();
+        long expResult = 3000;
+        long result = instance.getSampleRTT();
         assertNotEquals(expResult, result);
         
     }
@@ -178,8 +181,8 @@ public class TimerTest {
     public void testGetSampleRTT3() {
         System.out.println("getSampleRTT");
         Timer instance = new Timer();
-        int expResult = 21;
-        int result = instance.getSampleRTT();
+        long expResult = 21;
+        long result = instance.getSampleRTT();
         assertNotEquals(expResult, result);
         
     }
@@ -190,7 +193,7 @@ public class TimerTest {
     @Test
     public void testSetSampleRTT() {
         System.out.println("setSampleRTT");
-        int sampleRTT = 56;
+        long sampleRTT = 56;
         Timer instance = new Timer();
         instance.setSampleRTT(sampleRTT);
         assertEquals(sampleRTT, instance.getSampleRTT());
@@ -198,7 +201,7 @@ public class TimerTest {
     }
         public void testSetSampleRTT2() {
         System.out.println("setSampleRTT");
-        int sampleRTT = 3040;
+        long sampleRTT = 3040;
         Timer instance = new Timer();
         instance.setSampleRTT(sampleRTT);
         assertEquals(sampleRTT, instance.getSampleRTT());
@@ -212,8 +215,8 @@ public class TimerTest {
     public void testGetEstimatedRTT() {
         System.out.println("getEstimatedRTT");
         Timer instance = new Timer();
-        int expResult = 2000;
-        int result = instance.getEstimatedRTT();
+        long expResult = 2000;
+        long result = instance.getEstimatedRTT();
         assertEquals(expResult, result);
     }
         /**
@@ -223,8 +226,8 @@ public class TimerTest {
     public void testGetEstimatedRTT2() {
         System.out.println("getEstimatedRTT");
         Timer instance = new Timer();
-        int expResult = 7;
-        int result = instance.getEstimatedRTT();
+        long expResult = 7;
+        long result = instance.getEstimatedRTT();
         assertNotEquals(expResult, result);
     }
 
@@ -234,10 +237,10 @@ public class TimerTest {
     @Test
     public void testSetEstimatedRTT() {
         System.out.println("setEstimatedRTT");
-        int estimatedRTT = 4000;
+        long estimatedRTT = 4000;
         Timer instance = new Timer();
         instance.setEstimatedRTT(estimatedRTT);
-        int results = instance.getEstimatedRTT();
+        long results = instance.getEstimatedRTT();
         assertEquals(estimatedRTT, results );
     }
     
@@ -247,10 +250,10 @@ public class TimerTest {
     @Test
     public void testSetEstimatedRTT2() {
         System.out.println("setEstimatedRTT2");
-        int estimatedRTT = 83980;
+        long estimatedRTT = 83980;
         Timer instance = new Timer();
         instance.setEstimatedRTT(estimatedRTT);
-        int results = instance.getEstimatedRTT();
+        long results = instance.getEstimatedRTT();
         assertNotEquals(4, results );
     }
 
@@ -284,5 +287,80 @@ public class TimerTest {
         Timer instance = new Timer();
         instance.setDevRTT(devRTT);
         assertEquals(devRTT, instance.getDevRTT(), 0.0);
+    }
+
+    /**
+     * Test of startTimer method, of class Timer.
+     */
+    @Test
+    public void testStartTimer() {
+        System.out.println("startTimer");
+        Timer instance = new Timer();
+        instance.startTimer();
+        System.out.print("Start Time: " + instance.getStartTime());
+    }
+
+    /**
+     * Test of stopTimer method, of class Timer.
+     */
+    @Test
+    public void testStopTimer() throws InterruptedException {
+        System.out.println("stopTimer");
+        Timer instance = new Timer();
+        instance.startTimer();
+        Thread.sleep(100);
+        instance.stopTimer();
+        assertEquals(100, instance.getSampleRTT());
+        assertEquals(0, instance.getStartTime());
+        
+    }
+
+    /**
+     * Test of timerTimeOut method, of class Timer.
+     */
+    @Test
+    public void testTimerTimeOut() {
+        System.out.println("timerTimeOut");
+        Timer instance = new Timer();
+        long intervalFirst = instance.getTimeOutInterval();
+        long firstTimesTwo = intervalFirst * 2;
+        instance.startTimer();
+        instance.timerTimeOut();
+        long afterInterval = instance.getTimeOutInterval();
+        assertEquals(firstTimesTwo, afterInterval);
+    }
+
+    /**
+     * Test of getStartTime method, of class Timer.
+     */
+    @Test
+    public void testGetStartTime() {
+        System.out.println("getStartTime");
+        Timer instance = new Timer();
+        long expResult = 0L;
+        long result = instance.getStartTime();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of longToInt method, of class Timer.
+     */
+    @Test
+    public void testLongToInt() {
+        System.out.println("longToInt");
+        long value = Long.MAX_VALUE;
+        int expResult = Integer.MAX_VALUE;
+        int result = Timer.longToInt(value);
+        assertEquals(expResult, result);
+    }
+    @Test
+    public void testLongToInt2() {
+        System.out.println("longToInt2");
+        long value = 4959385l;
+        int expResult = 4959385;
+        int result = Timer.longToInt(value);
+        assertEquals(expResult, result);
     }
 }
