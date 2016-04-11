@@ -16,31 +16,35 @@ import java.net.DatagramSocket;
  * @author Chad Williams
  */
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException{
         RDT10Receiver receiverThread = null;
-        try{
+//        try{
             // Start receiver
-            receiverThread = new RDT10Receiver("Receiver", 49000);
+            receiverThread = new RDT10Receiver("Receiver", 55000);
             receiverThread.start();
-            
-            // Create sender
-            byte[] targetAdddress = {127,0,0,1};
-            RDT10Sender sender = new RDT10Sender();
-            sender.startSender(targetAdddress,49000);
-            
-            for (int i=0;i<10;i++){
-                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery Nilay";
+            while(true) {
                 
-                //Hack for spaces.s
-                data = data.replace(" ", "%");
-                // Send the data
-                sender.rdtSend(data.getBytes());
-                
-                // Sleeping simply for demo visualization purposes
-                Thread.sleep(10000);  
-            }            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+                Thread.sleep(1000);
+            }
+//            
+////             Create sender
+//            byte[] targetAdddress = {(byte)192,(byte)168,(byte)1,(byte)7};
+//            RDT10Sender sender = new RDT10Sender();
+//            sender.startSender(targetAdddress,49000);
+//            
+//            for (int i=0;i<10;i++){
+//                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery Nilay";
+//                
+//                //Hack for spaces.s
+//                data = data.replace(" ", "%");
+//                // Send the data
+//                sender.rdtSend(data.getBytes());
+//                
+//                // Sleeping simply for demo visualization purposes
+//                Thread.sleep(10000);  
+//            }            
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
     }
 }
