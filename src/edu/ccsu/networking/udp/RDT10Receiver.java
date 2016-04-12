@@ -60,7 +60,7 @@ public class RDT10Receiver extends Thread {
     @Override
     public void run() {
         try {
-            receivingSocket = new DatagramSocket(49000);
+            receivingSocket = new DatagramSocket(port);
 
             byte[] ackin = new byte[1];
             while (true) {
