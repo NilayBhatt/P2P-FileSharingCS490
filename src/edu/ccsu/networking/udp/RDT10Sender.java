@@ -56,10 +56,11 @@ public class RDT10Sender {
      * @throws java.lang.InterruptedException
      */
     public void rdtSend(byte[] data) throws SocketException, IOException, InterruptedException {
-     
+
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
         int packetNumber = 0;
-
+        // Get a new timer for measuring RTT
+        Timer timer = new Timer();
         while (byteStream.available() > 0) {
             byte[] packetData = new byte[packetDataSize];
             int bytesRead = byteStream.read(packetData);
@@ -78,16 +79,6 @@ public class RDT10Sender {
                     socket.setSoTimeout(100);
                     // Minor pause for easier visualization only
                     //Thread.sleep(1200);
-//                    DatagramPacket receiveack = new DatagramPacket(ack, ack.length);
-//                    socket.receive(receiveack);
-//                    byte[] receivingAck = receiveack.getData();
-//                    System.out.println("Got Ack From Receiver: " + new String(receivingAck));
-//                    if (new String(receivingAck).equals(new String(senderack))) {
-//                        if (new String(senderack).equals("0")) {
-//                            senderack = ack1;
-//                        } else {
-//                            senderack = ack0;
-//                        }
                     if (receiveAck()) {
                         sending = false;
                     }
@@ -98,10 +89,9 @@ public class RDT10Sender {
                     continue;
                 }
             }
-
+            System.out.println("### Sender done sending");
+            senderack = ack0;
         }
-        System.out.println("### Sender done sending");
-        senderack = ack0;
     }
 
     public byte[] addAckToData(byte[] ack, byte[] packet) {
