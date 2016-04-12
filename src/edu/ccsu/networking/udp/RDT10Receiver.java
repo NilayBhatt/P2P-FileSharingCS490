@@ -45,7 +45,7 @@ public class RDT10Receiver extends Thread {
         //if(endPacket.)
         System.out.println("So Far we have Received: " + finalData);
         finalData += endPacket;
-        if (finalData.endsWith("Nilay")) {
+        if (finalData.endsWith("\r\n")) {
             //finalData += endPacket;
             System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
             // Resetting whole data to start listening again
