@@ -15,7 +15,6 @@ import java.net.DatagramSocket;
  * @author Chad Williams
  */
 public class Main {
-
     public static void main(String[] args) {
         RDT10Receiver receiverThread = null;
         try {
