@@ -71,11 +71,15 @@ public class RDT10Receiver extends Thread {
                 receivingSocket.receive(packet);
                 packetData = Arrays.copyOf(packet.getData(), packet.getLength());
                 System.out.println("Got Data: " + new String(packetData));
-                
-                if(sendAck(packetData, packet)){
+                if (sendAck(packetData, packet)) {
                     byte[] dataToBeDelivered = new byte[packetData.length - 1];
                     System.arraycopy(packetData, 0, dataToBeDelivered, 0, packetData.length - 1);
                     //System.out.println("Delivering Data: " + new String(dataToBeDelivered));
+                    if (new String(receiverack).equals("1")) {
+                        receiverack = receiverack0;
+                    } else {
+                        receiverack = receiverack1;
+                    }
                     deliverData(dataToBeDelivered);
                 }
             }
@@ -95,18 +99,15 @@ public class RDT10Receiver extends Thread {
         byte[] ackin = new byte[1];
         ackin[0] = packetData[packetData.length - 1];
         if (new String(receiverack).equals(new String(ackin))) {
+            try {
+                DatagramPacket ack = new DatagramPacket(receiverack, receiverack.length, packet.getAddress(), packet.getPort());
+                receivingSocket.send(ack);
+                System.out.println("Receiver Sending Ack: " + new String(receiverack));
 
-            DatagramPacket ack = new DatagramPacket(receiverack, receiverack.length, packet.getAddress(), packet.getPort());
-            receivingSocket.send(ack);
-            System.out.println("Receiver Sending Ack: " + new String(receiverack));
-
-            if (new String(receiverack).equals("1")) {
-                receiverack = receiverack0;
-            } else {
-                receiverack = receiverack1;
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            return true;
         }
 
         return false;

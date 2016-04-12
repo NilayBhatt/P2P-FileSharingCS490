@@ -27,7 +27,7 @@ public class Main {
 
             // Create sender
             byte[] targetAdddress = {127, 0, 0, 1};
-            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 2};
+            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 8};
             RDT10Sender sender = new RDT10Sender();
             sender.startSender(targetAdddress, 55000);
             for (int i = 0; i < 10; i++) {
