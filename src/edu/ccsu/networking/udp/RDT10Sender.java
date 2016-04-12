@@ -89,9 +89,9 @@ public class RDT10Sender {
                     continue;
                 }
             }
-            System.out.println("### Sender done sending");
-            senderack = ack0;
         }
+        System.out.println("### Sender done sending");
+        senderack = ack0;
     }
 
     public byte[] addAckToData(byte[] ack, byte[] packet) {

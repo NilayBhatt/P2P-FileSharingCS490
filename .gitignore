@@ -1,7 +1,5 @@
 <<<<<<< HEAD
 /dist/
-=======
-
 nbproject/private/private.xml
 nbproject/private/
 build/
@@ -13,3 +11,4 @@ nbactions.xml
 nb-configuration.xml
 .class
 >>>>>>> refs/remotes/origin/timer
+!/build/
