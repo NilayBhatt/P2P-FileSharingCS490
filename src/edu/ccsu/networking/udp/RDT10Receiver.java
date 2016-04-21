@@ -108,8 +108,18 @@ public class RDT10Receiver extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            if (new String(receiverack).equals("1")) {
+                DatagramPacket ack = new DatagramPacket(receiverack0, receiverack0.length, packet.getAddress(), packet.getPort());
+                receivingSocket.send(ack);
+                System.out.println("Receiver Sending Ack: " + new String(receiverack0));
+            } else {
+                DatagramPacket ack = new DatagramPacket(receiverack1, receiverack1.length, packet.getAddress(), packet.getPort());
+                receivingSocket.send(ack);
+                System.out.println("Receiver Sending Ack: " + new String(receiverack0));
+            }
         }
-
+        
         return false;
     }
 }

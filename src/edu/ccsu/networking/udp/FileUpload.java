@@ -5,6 +5,8 @@
  */
 package edu.ccsu.networking.udp;
 
+import java.net.InetAddress;
+
 /**
  * File Upload Object class, helps 
  * us update items  in the 
@@ -15,46 +17,33 @@ package edu.ccsu.networking.udp;
 public class FileUpload {
 
     private String fileName = "";
-    private int fileSize = 0;
-    private int hostAddress = 0;
-    private int hostPort = 0;
+    private long fileSize = 0;
 
-    public FileUpload(String fileName, int fileSize, int hostAddress, int hostPort) {
+    public FileUpload(String fileName, long fileSize) {
         this.fileName = fileName;
         this.fileSize = fileSize;
-        this.hostAddress = hostAddress;
-        this.hostPort = hostPort;
-    }
-
-    public int getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(int fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public int getHostAddress() {
-        return hostAddress;
-    }
-
-    public void setHostAddress(int hostAddress) {
-        this.hostAddress = hostAddress;
-    }
-
-    public int getHostPort() {
-        return hostPort;
-    }
-
-    public void setHostPort(int hostPort) {
-        this.hostPort = hostPort;
     }
 
     public String getFileName() {
         return fileName;
     }
-    
-    public void setFileName(String fileName){
+
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
+    }
+    
+    public String toString() {
+        String s = fileName + "*" + fileSize + "\r\n";
+        
+        return s;
+    }
+    
 }

@@ -1,6 +1,7 @@
 package edu.ccsu.networking.udp;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import static java.lang.System.arraycopy;
 import java.net.DatagramPacket;
@@ -13,6 +14,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Simple sender, takes passed data breaks it into packets and sends them to the
@@ -31,6 +34,9 @@ public class RDT10Sender {
     private final byte[] ack0 = "0".getBytes();
     private byte[] senderack = "0".getBytes();
     private byte[] ack = new byte[1];
+    private File[] files;
+    private ArrayList<FileUpload> fileUploadList;
+    private final int PORT = 2010;
 
     public RDT10Sender() {
 
@@ -68,6 +74,10 @@ public class RDT10Sender {
             if (bytesRead < packetData.length - 1) {
                 packetData = Arrays.copyOf(packetData, bytesRead);
             }
+            String method = add();
+            method += InetAddress.getLocalHost().toString() + " ";
+
+            //Adding Ack to the Data in the end of Packet.
             byte[] modPacketData = addAckToData(senderack, packetData);
 
             DatagramPacket packet = new DatagramPacket(modPacketData, modPacketData.length, internetAddress, receiverPortNumber);
@@ -84,8 +94,7 @@ public class RDT10Sender {
                     }
                 } catch (SocketTimeoutException e) {
                     System.out.println("We got a time out for packet: " + new String(packet.getData()));
-                    //socket.send(packet);
-                    //socket.setSoTimeout(100);
+                    System.out.println("Resending...");
                     continue;
                 }
             }
@@ -119,5 +128,34 @@ public class RDT10Sender {
         }
 
         return false;
+    }
+
+    public String add() {
+        String add = "add*";
+        return add;
+    }
+    
+    public String getHost() throws UnknownHostException {
+            return InetAddress.getLocalHost().toString() + PORT;
+    }
+
+    public void SetFilesToSend(File[] files) {
+        this.files = new File[files.length];
+        this.files = files;
+    }
+
+    public void SyncFilesToServer(byte[] serverAddress) throws UnknownHostException {
+        fileUploadList = new ArrayList<>();
+        for (File f : files) {
+            FileUpload file;
+            file = new FileUpload(f.getName(), f.length());
+            fileUploadList.add(file);
+        }
+        makePackets(fileUploadList);
+    }
+    
+    private void makePackets(ArrayList<FileUpload> filesToSend) throws UnknownHostException{
+        String headers = add();
+        headers += getHost();
     }
 }
