@@ -148,7 +148,7 @@ public class RDT10Sender {
         fileUploadList = new ArrayList<>();
         for (File f : files) {
             FileUpload file;
-            file = new FileUpload(f.getName(), f.length());
+            file = new FileUpload(f.getName(), (int)f.length());
             fileUploadList.add(file);
         }
         makePackets(fileUploadList);

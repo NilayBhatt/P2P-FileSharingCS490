@@ -17,9 +17,12 @@ import java.net.InetAddress;
 public class FileUpload {
 
     private String fileName = "";
-    private long fileSize = 0;
+    private int fileSize = 0;
+    private byte[] hostAddress;
+    private int port;
 
-    public FileUpload(String fileName, long fileSize) {
+    
+    public FileUpload(String fileName, int fileSize) {
         this.fileName = fileName;
         this.fileSize = fileSize;
     }
@@ -36,8 +39,24 @@ public class FileUpload {
         return fileSize;
     }
 
-    public void setFileSize(long fileSize) {
+    public void setFileSize(int fileSize) {
         this.fileSize = fileSize;
+    }
+    
+    public byte[] getHostAddress() {
+        return hostAddress;
+    }
+
+    public void setHostAddress(byte[] hostAddress) {
+        this.hostAddress = hostAddress;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
     
     public String toString() {
