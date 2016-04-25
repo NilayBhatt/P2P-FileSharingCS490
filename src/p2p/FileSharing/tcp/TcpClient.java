@@ -5,54 +5,66 @@
  */
 package p2p.FileSharing.tcp;
 
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
- * @author NNB0930
+ * @author Travis
  */
-public class TcpClient {
-
-    private final int CLIENT_PORT = 3010;
-    private final int SERVER_PORT = 4010;
-    private final String downloadPath = "C:\\";
-    private String fileName;
-    private int fileSize = 0; 
+public class TcpClient extends Thread {
     
-    public String getFileName() {
-        return fileName;
+    final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
+
+    // hard coded local address + port for testing now
+    byte[] serverAddress = {127, 0, 0, 1};
+    int port = 2010;
+
+    public TcpClient(String name, int port) {
+        super(name);
+        this.port = port;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public int getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(int fileSize) {
-        this.fileSize = fileSize;
-    }
     
-    public TcpClient() {
-    }
-    
-    public void  ReceiveFile() {
+    public void run() {
         
-    }
-    
-    public void ConnectAndRequestFile(String fileName, byte[] p2pServerAddress, int port) throws IOException{
-        int bytesToRead;
-        
-    }
-    
-    public void DownloadFile() throws IOException {
-        ServerSocket serverSocket = new ServerSocket();
-        Socket socket = serverSocket.accept();
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-    }
+        // set up socket
+        try {
+            Socket socket = new Socket(InetAddress.getByName("localHost"), port);
+            
+            // set data to recieve
+            byte[] data = new byte[BUFFER_SIZE];
+            
+            // get file & file output stream to write to file from incoming data
+            // hard coded file for testing. 
+            File file = new File("//Users//Travis//Desktop//TestNETWORKING.c");
+            FileOutputStream fileOS = new FileOutputStream(file);
+            BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
+            InputStream inputStream = socket.getInputStream();
+            
+            // track amount of data read
+            int receivedData = 0;
+            
+            // while there is data to read, read it
+            while((receivedData = inputStream.read(data)) != -1 ) {
+                // write the data to file
+                bufferedOS.write(data, 0, receivedData);
+            }
+            
+            bufferedOS.flush();
+            socket.close();
 
+        } catch (IOException ex) {
+                Logger.getLogger(TcpClient.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+    
+    }
 }
