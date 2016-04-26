@@ -16,22 +16,14 @@ import static java.lang.Math.ceil;
  */
 public class Timer {
     
-    private static final float BETA = 0.25f;        
-    
+    private static final float BETA = 0.25f;           
     private static final float ONE_MINUS_BETA = 0.75f;
-
-    private static final float ALPHA = 0.125f;
-    
-    private static final int DEV_WEIGHT = 4;
-    
-    private long timeOutInterval;
-    
-    private long sampleRTT;
-    
-    private long estimatedRTT;
-    
-    private float devRTT;
-    
+    private static final float ALPHA = 0.125f;    
+    private static final int DEV_WEIGHT = 4;    
+    private long timeOutInterval;    
+    private long sampleRTT;    
+    private long estimatedRTT;    
+    private float devRTT;    
     private long startTime;
     
     public Timer() {
@@ -62,6 +54,8 @@ public class Timer {
     }
     
     public long updateTimeOutInterval() {
+        long updatedEstRTT = updateEstimatedRTT();
+        float updatedDevRTT = updateDevRTT();
        return this.timeOutInterval = (long) ceil(this.getEstimatedRTT() + 
                 (DEV_WEIGHT * this.devRTT));
     }

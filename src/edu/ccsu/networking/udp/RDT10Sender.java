@@ -86,11 +86,19 @@ public class RDT10Sender {
             while (sending) {
                 try {
                     socket.send(packet);
-                    socket.setSoTimeout(100);
+                    //Start the timer to capture sample RTT.
+                    timer.startTimer(); 
+                    //Gets the time Out interval (dynamic)
+                    socket.setSoTimeout((int)timer.getTimeOutInterval());
                     // Minor pause for easier visualization only
                     //Thread.sleep(1200);
                     if (receiveAck()) {
+                        //If we got the ack then stop the timer to collect the sample.
+                        timer.stopTimer();
+                        // Update the time out interval for the second trip to send.
+                        timer.updateTimeOutInterval();
                         sending = false;
+                        
                     }
                 } catch (SocketTimeoutException e) {
                     System.out.println("We got a time out for packet: " + new String(packet.getData()));
