@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Nilay Bhatt
  */
 public class Gui extends javax.swing.JFrame {
+
     private RDT10Sender sender = new RDT10Sender();
     private File[] sf;
 
@@ -50,7 +51,7 @@ public class Gui extends javax.swing.JFrame {
         buttonFileChooser = new javax.swing.JButton();
         lableFileChooser = new javax.swing.JLabel();
         serverIPAddress = new javax.swing.JTextField();
-        connectToServer = new javax.swing.JToggleButton();
+        killConnectionToServer = new javax.swing.JToggleButton();
         syncFiles = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         fileDataTable = new javax.swing.JTable();
@@ -95,10 +96,10 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        connectToServer.setText("Kill Connection");
-        connectToServer.addActionListener(new java.awt.event.ActionListener() {
+        killConnectionToServer.setText("Kill Connection");
+        killConnectionToServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connectToServerActionPerformed(evt);
+                killConnectionToServerActionPerformed(evt);
             }
         });
 
@@ -111,10 +112,7 @@ public class Gui extends javax.swing.JFrame {
 
         fileDataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "FIle Name", "File Size"
@@ -143,7 +141,7 @@ public class Gui extends javax.swing.JFrame {
                         .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(serverGuiLayout.createSequentialGroup()
                         .addGap(62, 62, 62)
-                        .addComponent(connectToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(killConnectionToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         serverGuiLayout.setVerticalGroup(
@@ -160,7 +158,7 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(connectToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(killConnectionToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(52, Short.MAX_VALUE))
         );
 
@@ -327,13 +325,14 @@ public class Gui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_serverIPAddressActionPerformed
 
-    private void connectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectToServerActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_connectToServerActionPerformed
+    private void killConnectionToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_killConnectionToServerActionPerformed
+        sender.Kill();
+// TODO add your handling code here:
+    }//GEN-LAST:event_killConnectionToServerActionPerformed
 
     private void syncFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncFilesActionPerformed
         try {
-            sender.SyncFilesToServer(connectToServer.toString().getBytes());
+            sender.SyncFilesToServer(killConnectionToServer.toString().getBytes());
         } catch (UnknownHostException ex) {
             Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -344,22 +343,20 @@ public class Gui extends javax.swing.JFrame {
     private void buttonFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFileChooserActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        int option = chooser.showOpenDialog (Gui.this);
-     
+        int option = chooser.showOpenDialog(Gui.this);
+
         if (option == JFileChooser.APPROVE_OPTION) {
-         sf = chooser.getSelectedFiles();
-         Pair<String, Integer> filePair;
-         Pair [] filePairArray = new Pair[1];
-         //filesChoosed.setModel(listModel);
-         sender.SetFilesToSend(sf);
-         //listModel.addElement("File Name \t\t File Size");
-         DefaultTableModel tableModel = (DefaultTableModel) fileDataTable.getModel();
-         for(File f : sf) {
-             filePairArray[0] = (new Pair(f.getName(), (int)f.length()));
-             tableModel.addRow(filePairArray);
-             //listModel.addElement(f.getName() +"\t" + + f.length());
-         }
-           }
+            sf = chooser.getSelectedFiles();
+            //filesChoosed.setModel(listModel);
+            sender.SetFilesToSend(sf);
+            //listModel.addElement("File Name \t\t File Size");
+            DefaultTableModel tableModel = (DefaultTableModel) fileDataTable.getModel();
+            for (File f : sf) {
+                String[] fileArray = {f.getName(), Integer.toString((int) f.length())};
+                tableModel.addRow(fileArray);
+                //listModel.addElement(f.getName() +"\t" + + f.length());
+            }
+        }
     }//GEN-LAST:event_buttonFileChooserActionPerformed
 
     private void clientServerConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientServerConnectActionPerformed
@@ -417,7 +414,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JPanel cilentDownloadGui;
     private javax.swing.JButton clientConnectToServer;
     private javax.swing.JTextField clientServerConnect;
-    private javax.swing.JToggleButton connectToServer;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -430,6 +426,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JToggleButton killConnectionToServer;
     private javax.swing.JLabel lableFileChooser;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
