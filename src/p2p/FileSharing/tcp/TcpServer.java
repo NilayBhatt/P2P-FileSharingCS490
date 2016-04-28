@@ -50,7 +50,7 @@ public class TcpServer extends Thread {
             InetAddress address = InetAddress.getByAddress(clientAddress);
             
             // set the file
-            File file = new File("//Users//Travis//Desktop//server programs//server.c");
+            File file = new File("//Users//Travis//pictures//6.png");
             FileInputStream fileIS = new FileInputStream(file);
             BufferedInputStream bufferIS = new BufferedInputStream(fileIS);
             

@@ -43,8 +43,8 @@ public class TcpClient extends Thread {
             byte[] data = new byte[BUFFER_SIZE];
             
             // get file & file output stream to write to file from incoming data
-            // hard coded file for testing. 
-            File file = new File("//Users//Travis//Desktop//TestNETWORKING.c");
+            // hard coded file for testing.
+            File file = new File("//Users//Travis//TestNETWORKING2");
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();
