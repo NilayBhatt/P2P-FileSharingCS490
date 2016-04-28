@@ -46,12 +46,32 @@ public class Main {
 //                // Sleeping simply for demo visualization purposes
 //                Thread.sleep(10000);
 //            }
+
             server = new TcpServer("serverThread", 2010);
             server.start();
         
             client = new TcpClient("clientThread", 2010);
             client.start();
-            
+
+
+            // Create sender
+            byte[] targetAdddress = {127, 0, 0, 1};
+            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 8};
+            RDT10Sender sender = new RDT10Sender();
+            sender.startSender(targetAdddress, 55000);
+            for (int i = 0; i < 10; i++) {
+                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery";
+                //Adds a way to find end of String Data
+                data = addTerminatingSeq(data);
+                //Hack for spaces
+                //data = data.replace(" ", "%");
+                // Send the data
+                sender.rdtSend(data.getBytes(), "add");
+
+                // Sleeping simply for demo visualization purposes
+                Thread.sleep(10000);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

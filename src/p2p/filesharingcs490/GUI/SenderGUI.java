@@ -77,29 +77,4 @@ public class SenderGUI extends JFrame {
 
     public static void main(String[] args) throws IOException {
     }
-//        String message = "hi this is a a message that we want to deliver and show them that the checksum works and travis is awesome and Lauren sucks";
-//        ByteArrayInputStream byteStream = new ByteArrayInputStream(message.getBytes());
-//        int packetNumber = 0;
-//        byte[] packetData = new byte[124];
-//        while (byteStream.available() > 0) {
-//            int bytesRead = byteStream.read(packetData);
-//            if (bytesRead < packetData.length) {
-//                packetData = Arrays.copyOf(packetData, bytesRead);
-//            }
-//            //new SenderGUI();
-//        }
-//        int checksum = Arrays.hashCode(packetData); // Adding corruption checking.
-//        System.out.println(checksum);
-//
-//        ByteBuffer bb = ByteBuffer.allocate(4);
-//
-//        bb.putInt(checksum);
-//        byte[] csArray = bb.array();
-//        
-//        byte[] finalPacketData = new byte[155];
-//        System.arraycopy(csArray, 0, finalPacketData, 0, csArray.length);
-//        System.arraycopy(packetData, 0, finalPacketData, csArray.length, finalPacketData.length);
-//        
-//        System.out.println(Arrays.toString(finalPacketData));
-//    }
 }
