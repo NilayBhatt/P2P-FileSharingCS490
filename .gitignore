@@ -13,3 +13,4 @@ nb-configuration.xml
 >>>>>>> refs/remotes/origin/timer
 !/build/
 *.class
+*.class
