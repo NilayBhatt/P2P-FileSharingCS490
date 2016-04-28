@@ -28,8 +28,7 @@ public class RDT10Sender {
     private int receiverPortNumber = 0;
     private DatagramSocket socket = null;
     private InetAddress internetAddress = null;
-    private final int packetDataSize = 15;
-    private final int checksumSize = 4;
+    private final int packetDataSize = 123;
     private final byte[] ack1 = "1".getBytes();
     private final byte[] ack0 = "0".getBytes();
     private byte[] senderack = "0".getBytes();
@@ -39,7 +38,6 @@ public class RDT10Sender {
     private final int PORT = 2010;
 
     public RDT10Sender() {
-
     }
 
     public void startSender(byte[] targetAddress, int receiverPortNumber) throws SocketException, UnknownHostException {
@@ -53,20 +51,19 @@ public class RDT10Sender {
             socket.close();
         }
     }
-
     /**
      * Receive data and pass it to the current state
      *
      * @param data
+     * @param methodName
      * @throws java.net.SocketException
      * @throws java.lang.InterruptedException
      */
-    public void rdtSend(byte[] data) throws SocketException, IOException, InterruptedException {
-
+    public void rdtSend(byte[] data, String methodName) throws SocketException, IOException, InterruptedException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
         int packetNumber = 0;
-        // Get a new timer for measuring RTT
         Timer timer = new Timer();
+
         while (byteStream.available() > 0) {
             byte[] packetData = new byte[packetDataSize];
             int bytesRead = byteStream.read(packetData);
@@ -74,15 +71,13 @@ public class RDT10Sender {
             if (bytesRead < packetData.length - 1) {
                 packetData = Arrays.copyOf(packetData, bytesRead);
             }
-            String method = add();
-            method += InetAddress.getLocalHost().toString() + " ";
-
+            byte[] packetDataWMethod = add(packetData, methodName);
             //Adding Ack to the Data in the end of Packet.
-            byte[] modPacketData = addAckToData(senderack, packetData);
-
+            byte[] modPacketData = addAckToData(senderack, packetDataWMethod);
             DatagramPacket packet = new DatagramPacket(modPacketData, modPacketData.length, internetAddress, receiverPortNumber);
             System.out.println("### Sender sending packet: " + new String(packetData) + "'");
             boolean sending = true;
+            
             while (sending) {
                 try {
                     socket.send(packet);
@@ -97,8 +92,7 @@ public class RDT10Sender {
                         timer.stopTimer();
                         // Update the time out interval for the second trip to send.
                         timer.updateTimeOutInterval();
-                        sending = false;
-                        
+                        sending = false;                   
                     }
                 } catch (SocketTimeoutException e) {
                     System.out.println("We got a time out for packet: " + new String(packet.getData()));
@@ -138,13 +132,14 @@ public class RDT10Sender {
         return false;
     }
 
-    public String add() {
-        String add = "add*";
-        return add;
+    public byte[] add(byte[] rawPacketData, String methodName) {
+        String modDataString = new String (rawPacketData); 
+        modDataString  = methodName + "*" + modDataString;
+        return modDataString.getBytes();
     }
     
     public String getHost() throws UnknownHostException {
-            return InetAddress.getLocalHost().toString() + PORT;
+            return InetAddress.getLocalHost().toString() + "*" + PORT;
     }
 
     public void SetFilesToSend(File[] files) {
@@ -152,18 +147,65 @@ public class RDT10Sender {
         this.files = files;
     }
 
-    public void SyncFilesToServer(byte[] serverAddress) throws UnknownHostException {
+    public void SyncFilesToServer(byte[] serverAddress) throws UnknownHostException, IOException, SocketException {
         fileUploadList = new ArrayList<>();
         for (File f : files) {
             FileUpload file;
             file = new FileUpload(f.getName(), (int)f.length());
             fileUploadList.add(file);
         }
-        makePackets(fileUploadList);
+        String rawData = makeRawPacketFileData(fileUploadList);
+        try {
+            rdtSend(rawData.getBytes(), "add");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    private void makePackets(ArrayList<FileUpload> filesToSend) throws UnknownHostException{
-        String headers = add();
-        headers += getHost();
+    /**
+     * Creates raw string of file names and file sizes 
+     * seperated by a ! and @ respectively and
+     * ending with \r\n
+     * @param filesToSend
+     * @return String of file names and sizes.
+     * @throws UnknownHostException 
+     */
+    private String makeRawPacketFileData(ArrayList<FileUpload> filesToSend){
+        String fileData = "";
+        for(FileUpload f : filesToSend) {
+            /**
+             * ! is the delimeter for end of file name and
+             * @ is the delimeter for end of file size 
+             * and all its data for it.
+             */
+            fileData += f.getFileName() +"!"+ (int)f.getFileSize() +"@";
+        }
+        //Ending for total files data.
+        fileData += "\r\n";
+        return fileData;
+    }
+    
+    /**
+     * Kill method that kills the connection from 
+     * the client. The directory server 
+     * kills all the data it has
+     * from this client.
+     */
+    public void Kill() {
+        try {
+            rdtSend(makePacketKillConnection().getBytes(), "kill");
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private String makePacketKillConnection() throws UnknownHostException {
+        String hostAdd = getHost();
+        
+        return hostAdd;
     }
 }

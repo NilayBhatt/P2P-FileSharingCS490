@@ -9,12 +9,17 @@ import edu.ccsu.networking.udp.RDT10Sender;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.util.Pair;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -22,7 +27,6 @@ import javax.swing.JList;
  */
 public class Gui extends javax.swing.JFrame {
     private RDT10Sender sender = new RDT10Sender();
-    private final DefaultListModel listModel = new DefaultListModel();
     private File[] sf;
 
     /**
@@ -48,8 +52,8 @@ public class Gui extends javax.swing.JFrame {
         serverIPAddress = new javax.swing.JTextField();
         connectToServer = new javax.swing.JToggleButton();
         syncFiles = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        filesChoosed = new javax.swing.JList();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        fileDataTable = new javax.swing.JTable();
         cilentDownloadGui = new javax.swing.JPanel();
         clientServerConnect = new javax.swing.JTextField();
         clientConnectToServer = new javax.swing.JButton();
@@ -91,7 +95,7 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        connectToServer.setText("Connect");
+        connectToServer.setText("Kill Connection");
         connectToServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connectToServerActionPerformed(evt);
@@ -105,12 +109,18 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        filesChoosed.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(filesChoosed);
+        fileDataTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "FIle Name", "File Size"
+            }
+        ));
+        jScrollPane3.setViewportView(fileDataTable);
 
         javax.swing.GroupLayout serverGuiLayout = new javax.swing.GroupLayout(serverGui);
         serverGui.setLayout(serverGuiLayout);
@@ -120,24 +130,21 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(serverGuiLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(serverGuiLayout.createSequentialGroup()
-                                .addComponent(lableFileChooser)
-                                .addGap(4, 4, 4)
-                                .addComponent(buttonFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(serverGuiLayout.createSequentialGroup()
-                                .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(connectToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(lableFileChooser)
+                        .addGap(4, 4, 4)
+                        .addComponent(buttonFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(serverGuiLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(serverGuiLayout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(serverGuiLayout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(serverGuiLayout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(connectToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         serverGuiLayout.setVerticalGroup(
             serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,15 +153,15 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonFileChooser)
                     .addComponent(lableFileChooser))
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
                 .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(connectToServer))
-                .addGap(18, 18, 18)
-                .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(98, Short.MAX_VALUE))
+                    .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(connectToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         cilentDownloadGui.setBackground(new java.awt.Color(204, 204, 204));
@@ -202,17 +209,18 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(cilentDownloadGuiLayout.createSequentialGroup()
                 .addGroup(cilentDownloadGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cilentDownloadGuiLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(cilentDownloadGuiLayout.createSequentialGroup()
                         .addGap(69, 69, 69)
                         .addComponent(clientServerConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(clientConnectToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(cilentDownloadGuiLayout.createSequentialGroup()
-                        .addGap(141, 141, 141)
-                        .addComponent(downloadFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cilentDownloadGuiLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(downloadFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(104, 104, 104))
         );
         cilentDownloadGuiLayout.setVerticalGroup(
             cilentDownloadGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,7 +229,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(cilentDownloadGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(clientServerConnect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clientConnectToServer))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(downloadFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -297,8 +305,8 @@ public class Gui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(serverGui, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(serverGui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cilentDownloadGui, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -306,10 +314,10 @@ public class Gui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(serverGui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cilentDownloadGui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(cilentDownloadGui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(serverGui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -328,6 +336,8 @@ public class Gui extends javax.swing.JFrame {
             sender.SyncFilesToServer(connectToServer.toString().getBytes());
         } catch (UnknownHostException ex) {
             Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_syncFilesActionPerformed
 
@@ -338,12 +348,16 @@ public class Gui extends javax.swing.JFrame {
      
         if (option == JFileChooser.APPROVE_OPTION) {
          sf = chooser.getSelectedFiles();
-         filesChoosed.setModel(listModel);
-         //filesChoosed = new JList(listModel);
+         Pair<String, Integer> filePair;
+         Pair [] filePairArray = new Pair[1];
+         //filesChoosed.setModel(listModel);
          sender.SetFilesToSend(sf);
-         listModel.addElement("File Name \t\t File Size");
+         //listModel.addElement("File Name \t\t File Size");
+         DefaultTableModel tableModel = (DefaultTableModel) fileDataTable.getModel();
          for(File f : sf) {
-             listModel.addElement(f.getName() +"\t" + + f.length());
+             filePairArray[0] = (new Pair(f.getName(), (int)f.length()));
+             tableModel.addRow(filePairArray);
+             //listModel.addElement(f.getName() +"\t" + + f.length());
          }
            }
     }//GEN-LAST:event_buttonFileChooserActionPerformed
@@ -411,11 +425,11 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton downloadFileButton;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JTable fileDataTable;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JList filesChoosed;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lableFileChooser;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;

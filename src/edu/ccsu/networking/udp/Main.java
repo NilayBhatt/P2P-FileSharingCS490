@@ -35,9 +35,9 @@ public class Main {
                 //Adds a way to find end of String Data
                 data = addTerminatingSeq(data);
                 //Hack for spaces
-                data = data.replace(" ", "%");
+                //data = data.replace(" ", "%");
                 // Send the data
-                sender.rdtSend(data.getBytes());
+                sender.rdtSend(data.getBytes(), "add");
 
                 // Sleeping simply for demo visualization purposes
                 Thread.sleep(10000);
