@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Chad Williams
  */
-public class RDT10Receiver extends Thread {
+public class RDT10Receiver implements Runnable {
 
     private int port;
     private DatagramSocket receivingSocket = null;
@@ -27,10 +27,11 @@ public class RDT10Receiver extends Thread {
     private byte[] receiverack = "0".getBytes();
     private final byte[] receiverack0 = "0".getBytes();
     private final byte[] receiverack1 = "1".getBytes();
-
-    public RDT10Receiver(String name, int port) {
-        super(name);
-        this.port = port;
+    private DataHandler dataHandler;
+ 
+   
+    public RDT10Receiver(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
     }
 
     public void stopListening() {
@@ -39,15 +40,28 @@ public class RDT10Receiver extends Thread {
         }
     }
 
-    public void deliverData(byte[] data) {
-        String endPacket = new String(data);
-        endPacket = endPacket.replace("%", " ");
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void deliverData(byte[] data, String hostAddress, int hostPort) {
+        byte[] method = new byte[3];
+        System.arraycopy(data, 0, method, 0, 3);
+        byte[] rawData = new byte[data.length - 4];
+        System.arraycopy(data, 4, rawData, 0, rawData.length - 1 );
+        String endPacket = new String(rawData);
+        //endPacket = endPacket.replace("%", " ");
         //if(endPacket.)
         //System.out.println("So Far we have Received: " + finalData);
         finalData += endPacket;
         if (finalData.endsWith("\r\n")) {
             //finalData += endPacket;
             System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
+            dataHandler.deliverData(finalData, new String(method), hostAddress, hostPort);
             // Resetting whole data to start listening again
             finalData = "";
             receiverack = receiverack0;
@@ -80,7 +94,7 @@ public class RDT10Receiver extends Thread {
                     } else {
                         receiverack = receiverack1;
                     }
-                    deliverData(dataToBeDelivered);
+                    deliverData(dataToBeDelivered, packet.getAddress().toString(), packet.getPort());
                 }
             }
         } catch (SocketTimeoutException e) {
