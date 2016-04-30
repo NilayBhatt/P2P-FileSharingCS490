@@ -5,20 +5,15 @@
  */
 package cs490;
 
+import edu.ccsu.networking.udp.Client;
+import edu.ccsu.networking.udp.DirectoryServer;
 import edu.ccsu.networking.udp.RDT10Sender;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.util.Pair;
-import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,8 +22,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Gui extends javax.swing.JFrame {
 
-    private RDT10Sender sender = new RDT10Sender();
+    //private RDT10Sender sender = new RDT10Sender();
+    private Client client;
     private File[] sf;
+    private DirectoryServer server;
 
     /**
      * Creates new form gui
@@ -55,6 +52,7 @@ public class Gui extends javax.swing.JFrame {
         syncFiles = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         fileDataTable = new javax.swing.JTable();
+        clientPort = new javax.swing.JTextField();
         cilentDownloadGui = new javax.swing.JPanel();
         clientServerConnect = new javax.swing.JTextField();
         clientConnectToServer = new javax.swing.JButton();
@@ -87,7 +85,7 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        lableFileChooser.setText("Clicl here to Choose the folder to share:");
+        lableFileChooser.setText("Click here to Choose the folder to share:");
 
         serverIPAddress.setText("Enter Server IP Address...");
         serverIPAddress.addActionListener(new java.awt.event.ActionListener() {
@@ -120,6 +118,13 @@ public class Gui extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(fileDataTable);
 
+        clientPort.setText("Your Port number...");
+        clientPort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clientPortActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout serverGuiLayout = new javax.swing.GroupLayout(serverGui);
         serverGui.setLayout(serverGuiLayout);
         serverGuiLayout.setHorizontalGroup(
@@ -135,13 +140,19 @@ public class Gui extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(serverGuiLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(63, 63, 63)
+                        .addComponent(killConnectionToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(serverGuiLayout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(killConnectionToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(serverGuiLayout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(clientPort, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, serverGuiLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
+                        .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         serverGuiLayout.setVerticalGroup(
@@ -153,13 +164,19 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(lableFileChooser))
                 .addGap(35, 35, 35)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(clientPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(serverGuiLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addComponent(syncFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(serverGuiLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(serverIPAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(killConnectionToServer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         cilentDownloadGui.setBackground(new java.awt.Color(204, 204, 204));
@@ -172,6 +189,11 @@ public class Gui extends javax.swing.JFrame {
         });
 
         clientConnectToServer.setText("Connect");
+        clientConnectToServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clientConnectToServerActionPerformed(evt);
+            }
+        });
 
         availableDownloadsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -326,13 +348,18 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_serverIPAddressActionPerformed
 
     private void killConnectionToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_killConnectionToServerActionPerformed
-        sender.Kill();
-// TODO add your handling code here:
+    // TODO add your handling code here:
     }//GEN-LAST:event_killConnectionToServerActionPerformed
 
     private void syncFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncFilesActionPerformed
         try {
-            sender.SyncFilesToServer(killConnectionToServer.toString().getBytes());
+            server = new DirectoryServer();
+            server.startReceiver();
+            //server.startSender();
+            client = new Client(serverIPAddress.getText(), Integer.parseInt(clientPort.getText())+1000, Integer.parseInt(clientPort.getText()));
+            client.startClientSender();
+            client.startClientReceiver(Integer.parseInt(clientPort.getText())+2000);
+            client.SyncFilesToServer();
         } catch (UnknownHostException ex) {
             Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -348,7 +375,7 @@ public class Gui extends javax.swing.JFrame {
         if (option == JFileChooser.APPROVE_OPTION) {
             sf = chooser.getSelectedFiles();
             //filesChoosed.setModel(listModel);
-            sender.SetFilesToSend(sf);
+            client.SetFilesToSend(sf);
             //listModel.addElement("File Name \t\t File Size");
             DefaultTableModel tableModel = (DefaultTableModel) fileDataTable.getModel();
             for (File f : sf) {
@@ -370,6 +397,15 @@ public class Gui extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void clientPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientPortActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_clientPortActionPerformed
+
+    private void clientConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientConnectToServerActionPerformed
+        String serverIP = clientServerConnect.getText();
+        
+    }//GEN-LAST:event_clientConnectToServerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -413,6 +449,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton buttonFileChooser;
     private javax.swing.JPanel cilentDownloadGui;
     private javax.swing.JButton clientConnectToServer;
+    private javax.swing.JTextField clientPort;
     private javax.swing.JTextField clientServerConnect;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
