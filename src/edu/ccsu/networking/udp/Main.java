@@ -27,17 +27,17 @@ public class Main {
 
             // Create sender
             byte[] targetAdddress = {127, 0, 0, 1};
-            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 2};
+            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 8};
             RDT10Sender sender = new RDT10Sender();
             sender.startSender(targetAdddress, 55000);
-
             for (int i = 0; i < 10; i++) {
-                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery \r\n";
-
-                //Hack for spaces.s
-                data = data.replace(" ", "%");
+                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery";
+                //Adds a way to find end of String Data
+                data = addTerminatingSeq(data);
+                //Hack for spaces
+                //data = data.replace(" ", "%");
                 // Send the data
-                sender.rdtSend(data.getBytes());
+                sender.rdtSend(data.getBytes(), "add");
 
                 // Sleeping simply for demo visualization purposes
                 Thread.sleep(10000);
@@ -45,5 +45,10 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public static String addTerminatingSeq(String s) {
+        s += " \r\n";
+        return s;
     }
 }

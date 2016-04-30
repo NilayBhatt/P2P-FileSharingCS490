@@ -43,7 +43,7 @@ public class RDT10Receiver extends Thread {
         String endPacket = new String(data);
         endPacket = endPacket.replace("%", " ");
         //if(endPacket.)
-        System.out.println("So Far we have Received: " + finalData);
+        //System.out.println("So Far we have Received: " + finalData);
         finalData += endPacket;
         if (finalData.endsWith("\r\n")) {
             //finalData += endPacket;
@@ -71,24 +71,15 @@ public class RDT10Receiver extends Thread {
                 receivingSocket.receive(packet);
                 packetData = Arrays.copyOf(packet.getData(), packet.getLength());
                 System.out.println("Got Data: " + new String(packetData));
-                ackin[0] = packetData[packetData.length - 1];
-
-                if (new String(receiverack).equals(new String(ackin))) {
-
-                    DatagramPacket ack = new DatagramPacket(receiverack, receiverack.length, packet.getAddress(), packet.getPort());
-                    receivingSocket.send(ack);
-                    System.out.println("Receiver Sending Ack: " + new String(receiverack));
-
+                if (sendAck(packetData, packet)) {
+                    byte[] dataToBeDelivered = new byte[packetData.length - 1];
+                    System.arraycopy(packetData, 0, dataToBeDelivered, 0, packetData.length - 1);
+                    //System.out.println("Delivering Data: " + new String(dataToBeDelivered));
                     if (new String(receiverack).equals("1")) {
                         receiverack = receiverack0;
                     } else {
                         receiverack = receiverack1;
                     }
-                    byte[] dataToBeDelivered = new byte[packetData.length - 1];
-                    System.arraycopy(packetData, 0, dataToBeDelivered, 0, packetData.length - 1);
-
-                    System.out.println("Delivering Data: " + new String(dataToBeDelivered));
-
                     deliverData(dataToBeDelivered);
                 }
             }
@@ -102,5 +93,33 @@ public class RDT10Receiver extends Thread {
             Logger.getLogger(RDT10Receiver.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public boolean sendAck(byte[] b, DatagramPacket packet) throws IOException {
+        byte[] ackin = new byte[1];
+        ackin[0] = packetData[packetData.length - 1];
+        if (new String(receiverack).equals(new String(ackin))) {
+            try {
+                DatagramPacket ack = new DatagramPacket(receiverack, receiverack.length, packet.getAddress(), packet.getPort());
+                receivingSocket.send(ack);
+                System.out.println("Receiver Sending Ack: " + new String(receiverack));
+
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (new String(receiverack).equals("1")) {
+                DatagramPacket ack = new DatagramPacket(receiverack0, receiverack0.length, packet.getAddress(), packet.getPort());
+                receivingSocket.send(ack);
+                System.out.println("Receiver Sending Ack: " + new String(receiverack0));
+            } else {
+                DatagramPacket ack = new DatagramPacket(receiverack1, receiverack1.length, packet.getAddress(), packet.getPort());
+                receivingSocket.send(ack);
+                System.out.println("Receiver Sending Ack: " + new String(receiverack0));
+            }
+        }
+        
+        return false;
     }
 }

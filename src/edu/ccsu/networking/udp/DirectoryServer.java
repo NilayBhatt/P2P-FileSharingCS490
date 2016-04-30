@@ -36,8 +36,7 @@ public class DirectoryServer {
         return fileList.remove(file);
     }
     public List<FileUpload> ListAll()  {
-        return fileList;
-        
+        return fileList;        
     }
     
     public void List(String fileName) {
