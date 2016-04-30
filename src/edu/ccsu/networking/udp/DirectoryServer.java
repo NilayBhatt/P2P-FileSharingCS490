@@ -47,7 +47,8 @@ public class DirectoryServer implements DataHandler {
         }
     }
     
-    public void startReceiver() {
+    public void startReceiver(int serverPort) {
+        this.serverPort = serverPort;
         serverReceiver = new RDT10Receiver(this);
         serverReceiver.setPort(serverPort);
         receiverThread = new Thread(serverReceiver);
@@ -55,7 +56,7 @@ public class DirectoryServer implements DataHandler {
     }
 
     public boolean add(FileUpload file) {
-        if (fileList.isEmpty() || fileList == null) {
+        if (fileList == null || fileList.isEmpty()) {
             fileList = new ArrayList<>();
             return fileList.add(file);
         } else {
@@ -102,7 +103,7 @@ public class DirectoryServer implements DataHandler {
     public void deliverData(String data, String method, String hostAddress, int hostPort) {
         clientPort = hostPort;
         clientAddress = hostAddress;
-        if(method.equals("add*")) {
+        if(method.contains("add")) {
             //filename!fileSize
             String []fileData = data.split("@");
             for(String s : fileData){
@@ -110,7 +111,7 @@ public class DirectoryServer implements DataHandler {
                 FileUpload fileObject = new FileUpload(file[0], Integer.parseInt(file[1]));
                 fileObject.setHostAddress(hostAddress);
                 fileObject.setPort(hostPort);
-                fileList.add(fileObject);
+                add(fileObject);
             }
         }
     }

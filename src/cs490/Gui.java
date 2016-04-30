@@ -7,10 +7,12 @@ package cs490;
 
 import edu.ccsu.networking.udp.Client;
 import edu.ccsu.networking.udp.DirectoryServer;
+import edu.ccsu.networking.udp.FileUpload;
 import edu.ccsu.networking.udp.RDT10Sender;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -197,17 +199,7 @@ public class Gui extends javax.swing.JFrame {
 
         availableDownloadsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "File Name", "File Size", "Host Address", "Host Port"
@@ -354,9 +346,12 @@ public class Gui extends javax.swing.JFrame {
     private void syncFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncFilesActionPerformed
         try {
             server = new DirectoryServer();
-            server.startReceiver();
+            server.startReceiver(Integer.parseInt(clientPort.getText())+1000);
             //server.startSender();
-            client = new Client(serverIPAddress.getText(), Integer.parseInt(clientPort.getText())+1000, Integer.parseInt(clientPort.getText()));
+            //client = new Client();
+            client.setServerAddress(serverIPAddress.getText());
+            client.setServerReceiverPort(Integer.parseInt(clientPort.getText())+1000);
+            client.setClientSenderPort(Integer.parseInt(clientPort.getText()));
             client.startClientSender();
             client.startClientReceiver(Integer.parseInt(clientPort.getText())+2000);
             client.SyncFilesToServer();
@@ -375,6 +370,7 @@ public class Gui extends javax.swing.JFrame {
         if (option == JFileChooser.APPROVE_OPTION) {
             sf = chooser.getSelectedFiles();
             //filesChoosed.setModel(listModel);
+            client = new Client();
             client.SetFilesToSend(sf);
             //listModel.addElement("File Name \t\t File Size");
             DefaultTableModel tableModel = (DefaultTableModel) fileDataTable.getModel();
@@ -404,7 +400,12 @@ public class Gui extends javax.swing.JFrame {
 
     private void clientConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientConnectToServerActionPerformed
         String serverIP = clientServerConnect.getText();
-        
+        DefaultTableModel tableModel = (DefaultTableModel) availableDownloadsTable.getModel();
+        ArrayList<FileUpload> serverFiles = (ArrayList<FileUpload>) server.ListAll();
+        for(FileUpload f : serverFiles) {
+            String[] temp = {f.getFileName(), Integer.toString((int)f.getFileSize()), f.getHostAddress(), Integer.toString(f.getPort())};
+            tableModel.addRow(temp);
+        }
     }//GEN-LAST:event_clientConnectToServerActionPerformed
 
     /**

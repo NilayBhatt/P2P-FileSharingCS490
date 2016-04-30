@@ -30,14 +30,68 @@ public class Client implements DataHandler{
     private int clientSenderPort;
     private Thread receiverThread;
 
-    public Client(String serverAddress, int serverReceiverPort, int clientSenderPort) {
-        sender = new RDT10Sender(clientSenderPort);
+    public Client() {
+    }
+
+    public RDT10Sender getSender() {
+        return sender;
+    }
+
+    public void setSender(RDT10Sender sender) {
+        this.sender = sender;
+    }
+
+    public String getServerAddress() {
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress;
+    }
+
+    public int getServerReceiverPort() {
+        return serverReceiverPort;
+    }
+
+    public void setServerReceiverPort(int serverReceiverPort) {
         this.serverReceiverPort = serverReceiverPort;
+    }
+
+    public RDT10Receiver getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(RDT10Receiver receiver) {
+        this.receiver = receiver;
+    }
+
+    public int getClientReceiverPort() {
+        return clientReceiverPort;
+    }
+
+    public void setClientReceiverPort(int clientReceiverPort) {
+        this.clientReceiverPort = clientReceiverPort;
+    }
+
+    public int getClientSenderPort() {
+        return clientSenderPort;
+    }
+
+    public void setClientSenderPort(int clientSenderPort) {
+        this.clientSenderPort = clientSenderPort;
+    }
+
+    public Thread getReceiverThread() {
+        return receiverThread;
+    }
+
+    public void setReceiverThread(Thread receiverThread) {
+        this.receiverThread = receiverThread;
     }
 
     public void startClientSender() {
         try {
+            sender = new RDT10Sender(clientSenderPort);
             sender.startSender(serverAddress, serverReceiverPort);
         } catch (SocketException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,8 +178,6 @@ public class Client implements DataHandler{
         this.fileUploadList = fileUploadList;
     }
 
-    @Override
     public void deliverData(String data, String method, String hostAddress, int hostPort) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

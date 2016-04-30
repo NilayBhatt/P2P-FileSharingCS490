@@ -49,16 +49,17 @@ public class RDT10Receiver implements Runnable {
     }
 
     public void deliverData(byte[] data, String hostAddress, int hostPort) {
-        byte[] method = new byte[3];
+        byte[] method = new byte[4];
         System.arraycopy(data, 0, method, 0, 3);
         byte[] rawData = new byte[data.length - 4];
-        System.arraycopy(data, 4, rawData, 0, rawData.length - 1 );
+        System.arraycopy(data, 4, rawData, 0, rawData.length);
         String endPacket = new String(rawData);
         //endPacket = endPacket.replace("%", " ");
         //if(endPacket.)
         //System.out.println("So Far we have Received: " + finalData);
         finalData += endPacket;
         if (finalData.endsWith("\r\n")) {
+            finalData = finalData.replace("\r\n", "");
             //finalData += endPacket;
             System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
             dataHandler.deliverData(finalData, new String(method), hostAddress, hostPort);
