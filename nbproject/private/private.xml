@@ -5,11 +5,12 @@
         <group>
             <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/cs490/Gui.java</file>
             <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/Main.java</file>
+            <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/Client.java</file>
             <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/DirectoryServer.java</file>
             <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/RDT10Receiver.java</file>
-            <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/Timer.java</file>
+            <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/DataHandler.java</file>
+            <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/FileUpload.java</file>
             <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/edu/ccsu/networking/udp/RDT10Sender.java</file>
-            <file>file:/C:/Users/Nilay%20Bhatt/Documents/GitHub/GoPiGo/P2P-FileSharingCS490/src/p2p/filesharingcs490/GUI/SenderGUI.java</file>
         </group>
     </open-files>
 </project-private>

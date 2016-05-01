@@ -12,4 +12,5 @@ package edu.ccsu.networking.udp;
 public interface DataHandler {
     
     public void deliverData(String data, String method, String hostAddress, int hostPort);
+    public void deliverList(String data);
 }

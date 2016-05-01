@@ -22,6 +22,7 @@ public class Client implements DataHandler{
 
     private File[] files;
     private ArrayList<FileUpload> fileUploadList;
+    private ArrayList<FileUpload> availableFileList;
     private RDT10Sender sender;
     private String serverAddress;
     private int serverReceiverPort;
@@ -87,6 +88,14 @@ public class Client implements DataHandler{
 
     public void setReceiverThread(Thread receiverThread) {
         this.receiverThread = receiverThread;
+    }
+
+    public ArrayList<FileUpload> getAvailableFileList() {
+        return availableFileList;
+    }
+
+    public void setAvailableFileList(ArrayList<FileUpload> availableFileList) {
+        this.availableFileList = availableFileList;
     }
 
     public void startClientSender() {
@@ -165,6 +174,18 @@ public class Client implements DataHandler{
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void RequestFileList() {
+        try{
+            sender.rdtSend("List all Files".getBytes(), "get");
+        }  catch (UnknownHostException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public File[] getFiles() {
         return files;
@@ -179,5 +200,24 @@ public class Client implements DataHandler{
     }
 
     public void deliverData(String data, String method, String hostAddress, int hostPort) {
+    }
+
+    @Override
+    public void deliverList(String data) {
+        availableFileList = new ArrayList<>();
+        String [] filesList = data.split("$");
+       for(String s : filesList) {
+           FileUpload tempFile;
+           String[] f = s.split("!");
+           String[] temp = f[1].split("@");
+           
+           tempFile = new FileUpload(f[0], Integer.parseInt(temp[0]));
+           
+           String[] temp2 = temp[1].split("#");
+           tempFile.setHostAddress(temp2[0]);
+           tempFile.setPort(Integer.parseInt(temp2[1]));
+           
+           availableFileList.add(tempFile);
+       }
     }
 }

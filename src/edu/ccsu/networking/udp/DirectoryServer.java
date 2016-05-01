@@ -5,6 +5,7 @@
  */
 package edu.ccsu.networking.udp;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -114,6 +115,33 @@ public class DirectoryServer implements DataHandler {
                 add(fileObject);
             }
         }
+        
+        if(method.contains("get")) {
+            if(fileList == null || fileList.isEmpty()){
+                
+            }else {
+                String files = makePacketFileList();
+                startSender(clientAddress, 3010, 6010);
+                try {
+                    serverSender.rdtSend(files.getBytes(), "lst");
+                } catch (IOException ex) {
+                    Logger.getLogger(DirectoryServer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(DirectoryServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    public String makePacketFileList() {
+        String fileString = "";
+        for(FileUpload file : fileList) {
+            fileString += file.toString();
+        }
+        return fileString;
+    }
+    
+    public void deliverList(String data) {
     }
     
 }
