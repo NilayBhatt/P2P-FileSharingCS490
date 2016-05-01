@@ -29,6 +29,7 @@ public class Main {
         System.out.println(filePath.getSharedFolderPath());
         
         try {
+<<<<<<< HEAD
 //            //Start receiver
 //            receiverThread = new RDT10Receiver("Receiver", 55000);
 //            receiverThread.start();
@@ -61,6 +62,28 @@ public class Main {
             client.start();
             
             
+=======
+            //Start receiver
+            //receiverThread = new RDT10Receiver("Receiver", 55000);
+            //receiverThread.start();
+//            while (true) {
+//                Thread.sleep(1000);
+//            }
+
+            // Create sender
+            //byte[] targetAdddress = {127, 0, 0, 1};
+            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 8};
+            //RDT10Sender sender = new RDT10Sender();
+            //sender.startSender(targetAdddress, 55000);
+            for (int i = 0; i < 10; i++) {
+                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery";
+                //Adds a way to find end of String Data
+                data = addTerminatingSeq(data);
+                //Hack for spaces
+                //data = data.replace(" ", "%");
+                // Send the data
+                //sender.rdtSend(data.getBytes(), "add");
+>>>>>>> NilayBranch
 
         } catch (Exception e) {
             e.printStackTrace();

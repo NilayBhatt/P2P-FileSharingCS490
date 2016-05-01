@@ -13,10 +13,17 @@ refs/remotes/origin/timer
 !/build/
 *.class
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 nbproject/private/private.properties
 
 nbproject/private/private.xml
 =======
+*.class
+>>>>>>> NilayBranch
+=======
+*.class
+*.class
+*.class
 *.class
 >>>>>>> NilayBranch
