@@ -39,9 +39,8 @@ public class TcpServer extends Thread {
     
     private String serverAddress;
     
-    public TcpServer(String clientAddress, int port, String fileName) {
+    public TcpServer(String clientAddress, String fileName) {
         super(clientAddress);
-        this.port = port;
         this.fileName = fileName;
     }
     
@@ -100,14 +99,14 @@ public class TcpServer extends Thread {
         
     }
     
-//    public String getFileName() {
-//        return this.fileName;
-//    }
-//    
-//    public void setFileName(String fileName) {
-//        this.fileName = fileName;
-//    } 
-//    
+    public String getFileName() {
+        return this.fileName;
+    }
+    
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    } 
+    
     public String getServerAddress() {
         return this.serverAddress;
     }
