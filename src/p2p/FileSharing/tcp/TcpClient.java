@@ -46,6 +46,8 @@ public class TcpClient extends Thread {
             // set data to recieve
             byte[] data = new byte[BUFFER_SIZE];
             
+            byte[] httpStatus = new byte[Integer.SIZE / 8];
+            
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
             
@@ -57,19 +59,62 @@ public class TcpClient extends Thread {
             // track amount of data read
             int receivedData = 0;
             
+            boolean flag = false;
             // while there is data to read, read it
-            while((receivedData = inputStream.read(data)) != -1 ) {
-                // write the data to file
-                bufferedOS.write(data, 0, receivedData);
+            
+            if (!flag) {
+                try {
+                receivedData = inputStream.read(httpStatus, 0, (Integer.SIZE / 8));
+                flag = true;
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             
-            bufferedOS.flush();
-            socket.close();
+            String httpString = new String(httpStatus);
+            
+            switch (httpString) {
+                    case "200":
+                        // OK
+                        try {
+                            while((receivedData = inputStream.read(data)) != -1 ) {
+                                // write the data to file
+                                bufferedOS.write(data, 0, receivedData);
+                            }
+                        } catch (IOException ex) {
+                              Logger.getLogger(TcpClient.class.getName()).log(Level.SEVERE, null, ex);
 
-        } catch (IOException ex) {
-                Logger.getLogger(TcpClient.class.getName()).log(Level.SEVERE, null, ex);
-
+                        }
+                        try {
+                        bufferedOS.flush();
+                          socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                     break;
+                     
+                    case "400":
+                        // bad request
+                        
+                        break;
+                        
+                    case "404":
+                        // file not found
+                        
+                        break;
+                        
+                    case "500":
+                        // HTTP Version Not Supported
+                        
+                        break;
+                     
+            
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+            
+            
     
     }
     

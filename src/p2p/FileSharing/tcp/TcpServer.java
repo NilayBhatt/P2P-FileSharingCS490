@@ -42,7 +42,7 @@ public class TcpServer extends Thread {
     public TcpServer(String clientAddress, String fileName) {
         super(clientAddress);
         this.fileName = fileName;
-    }
+    }   
     
     public void run() {
            
