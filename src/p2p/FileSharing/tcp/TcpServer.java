@@ -8,6 +8,7 @@ package p2p.FileSharing.tcp;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -33,11 +34,21 @@ public class TcpServer extends Thread {
     
     private byte[] data;
     
+    private byte[] httpStatus;
+    
     private long fileLength;
     
     private String fileName;
     
     private String serverAddress;
+    
+    private File file;
+    
+    private FileInputStream fileIS;
+    
+    private BufferedInputStream bufferIS;
+    
+    private OutputStream outputStream;
     
     public TcpServer(String clientAddress, String fileName) {
         super(clientAddress);
@@ -52,24 +63,38 @@ public class TcpServer extends Thread {
             while(true) {
                 
                 Socket clientSocket = serverSocket.accept();
+                // set up the output stream to client
+                outputStream = clientSocket.getOutputStream();
 
                 // set the address
     //            InetAddress address = InetAddress.getByAddress(clientAddress);
 
                 // set the file
-                File file = new File(fileName);
-                FileInputStream fileIS = new FileInputStream(file);
-                BufferedInputStream bufferIS = new BufferedInputStream(fileIS);
-
-                // set up the output stream to client
-                OutputStream outputStream = clientSocket.getOutputStream();
+                try {
+                    file = new File(fileName);
+                    fileIS = new FileInputStream(file);
+                    bufferIS = new BufferedInputStream(fileIS);
+                    
+                // if file not found
+                    
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    httpStatus = Integer.toString(404).getBytes();
+                    outputStream.write(httpStatus);
+                }
+                
 
                 // get file length
                 fileLength = file.length();
 
                 // for tracking amount of file already sent intialize to 0 to start
                 long sentData = 0;
-
+                
+                
+                // flag for sending status code
+                boolean flag = false;
+                
+                
                 while(sentData != fileLength) {
                     int sendSize = BUFFER_SIZE;
 
@@ -81,6 +106,12 @@ public class TcpServer extends Thread {
                         sentData = fileLength;
                     }
 
+                    // send the status code of OK
+                    if (!flag) {
+                        httpStatus = Integer.toString(200).getBytes();
+                        outputStream.write(httpStatus);
+                        flag = true;
+                    }   
                     // send the new portion of the file
                     data = new byte[sendSize];
                     bufferIS.read(data, 0, sendSize);
@@ -94,7 +125,7 @@ public class TcpServer extends Thread {
             }
   
         } catch (IOException ex) {
-            Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         
     }

@@ -54,7 +54,7 @@ public class Main {
 //                Thread.sleep(10000);
 //            }
 
-            server = new TcpServer(2010);
+//            server = new TcpServer(2010);
             server.start();
         
             client = new TcpClient(server.getServerAddress(), 2010);

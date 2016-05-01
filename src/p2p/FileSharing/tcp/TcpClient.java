@@ -92,12 +92,11 @@ public class TcpClient extends Thread {
                             e.printStackTrace();
                         }
                      break;
-                     
-                    case "400":
-                        // bad request
-                        System.out.println("Bad Request");
-                        
-                        break;
+//                     
+//                    case "400":
+//                        // bad request
+//                        
+//                        break;
                         
                     case "404":
                         // file not found
@@ -105,11 +104,15 @@ public class TcpClient extends Thread {
                         
                         break;
                         
-                    case "500":
+                    case "505":
                         // HTTP Version Not Supported
                         System.out.println("HTTP version not supported");
                         
                         break;
+                        
+                    default: 
+                        // bad request 400
+                        System.out.println("Bad Request");
                      
             
             }
