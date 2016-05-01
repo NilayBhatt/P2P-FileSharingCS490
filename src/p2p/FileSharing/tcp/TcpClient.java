@@ -75,7 +75,7 @@ public class TcpClient extends Thread {
             
             switch (httpString) {
                     case "200":
-                        // OK
+                        // OK - so read file
                         try {
                             while((receivedData = inputStream.read(data)) != -1 ) {
                                 // write the data to file
@@ -95,16 +95,19 @@ public class TcpClient extends Thread {
                      
                     case "400":
                         // bad request
+                        System.out.println("Bad Request");
                         
                         break;
                         
                     case "404":
                         // file not found
+                        System.out.println("File not found");
                         
                         break;
                         
                     case "500":
                         // HTTP Version Not Supported
+                        System.out.println("HTTP version not supported");
                         
                         break;
                      
