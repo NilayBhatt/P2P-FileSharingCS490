@@ -47,7 +47,7 @@ public class RDT10Receiver implements Runnable {
         this.port = port;
     }
 
-    public void deliverData(byte[] data, String hostAddress, int hostPort) {
+    public void deliverData(byte[] data, String hostAddress) {
         byte[] method = new byte[4];
         System.arraycopy(data, 0, method, 0, 3);
         byte[] rawData = new byte[data.length - 4];
@@ -62,9 +62,12 @@ public class RDT10Receiver implements Runnable {
             finalData = finalData.replace("\r\n", "");
             //finalData += endPacket;
             System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
-            if (stringMethod.contains("get") || stringMethod.contains("add")) {
-                dataHandler.deliverData(finalData, new String(method), hostAddress, hostPort);
-            } else {
+            if (stringMethod.contains("add")) {
+                String[] temp = finalData.split("%");
+                dataHandler.deliverData(temp[1], new String(method), hostAddress, Integer.parseInt(temp[0]));
+            } else if(stringMethod.contains("qur")) {
+                dataHandler.queryData(finalData, new String(method), hostAddress);
+            } else if(stringMethod.contains("lst")) {
                 dataHandler.deliverList(finalData);
             }
             // Resetting whole data to start listening again
@@ -99,7 +102,7 @@ public class RDT10Receiver implements Runnable {
                     } else {
                         receiverack = receiverack1;
                     }
-                    deliverData(dataToBeDelivered, packet.getAddress().toString(), packet.getPort());
+                    deliverData(dataToBeDelivered, packet.getAddress().toString());
                 }
             }
         } catch (SocketTimeoutException e) {

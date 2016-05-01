@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -179,9 +180,9 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(startServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(startServerButton))
                 .addGap(2, 2, 2)
-                .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lableFileChooser)
-                    .addComponent(buttonFileChooser))
+                .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonFileChooser, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lableFileChooser))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -219,6 +220,11 @@ public class Gui extends javax.swing.JFrame {
                 "File Name", "File Size", "Host Address", "Host Port"
             }
         ));
+        availableDownloadsTable.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                availableDownloadsTableComponentAdded(evt);
+            }
+        });
         jScrollPane1.setViewportView(availableDownloadsTable);
 
         downloadFileButton.setText("Download Selected File");
@@ -421,19 +427,32 @@ public class Gui extends javax.swing.JFrame {
         client.setServerAddress(serverIP);
         client.setServerReceiverPort(2010);
         client.startClientSender();
+        client.startClientReceiver(3010);
+        //server.startReceiver(3010);
         client.RequestFileList();
-        DefaultTableModel tableModel = new DefaultTableModel();
-        availableDownloadsTable.setModel(tableModel);
-        ArrayList<FileUpload> serverFiles = (ArrayList<FileUpload>) client.getAvailableFileList();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultTableModel tableModel2 = (DefaultTableModel) availableDownloadsTable.getModel();
+        ArrayList<FileUpload> serverFiles = new ArrayList<>();
+        serverFiles = client.getAvailableFileList();
         for(FileUpload f : serverFiles) {
             String[] temp = {f.getFileName(), Integer.toString((int)f.getFileSize()), f.getHostAddress(), Integer.toString(f.getPort())};
-            tableModel.addRow(temp);
+            System.out.println("Adding this to the DataTable: ");
+                System.out.println(temp.toString());
+            tableModel2.addRow(temp);
         }
     }//GEN-LAST:event_clientConnectToServerActionPerformed
 
     private void clientServerConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientServerConnectActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_clientServerConnectActionPerformed
+
+    private void availableDownloadsTableComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_availableDownloadsTableComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_availableDownloadsTableComponentAdded
 
     /**
      * @param args the command line arguments

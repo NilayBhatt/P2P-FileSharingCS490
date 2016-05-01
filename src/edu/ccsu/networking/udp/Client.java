@@ -91,6 +91,9 @@ public class Client implements DataHandler{
     }
 
     public ArrayList<FileUpload> getAvailableFileList() {
+        if(availableFileList == null || availableFileList.isEmpty()){
+            return new ArrayList<FileUpload>();
+        }
         return availableFileList;
     }
 
@@ -130,7 +133,7 @@ public class Client implements DataHandler{
         }
         String rawData = makeRawPacketFileData(fileUploadList);
         try {
-            sender.rdtSend(rawData.getBytes(), "add");
+            sender.rdtSend((Integer.toString(clientSenderPort+2000) + "%" +rawData).getBytes(), "add");
         } catch (InterruptedException ex) {
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -177,7 +180,7 @@ public class Client implements DataHandler{
     
     public void RequestFileList() {
         try{
-            sender.rdtSend("List all Files".getBytes(), "get");
+            sender.rdtSend("List all Files \r\n".getBytes(), "qur");
         }  catch (UnknownHostException ex) {
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -205,7 +208,7 @@ public class Client implements DataHandler{
     @Override
     public void deliverList(String data) {
         availableFileList = new ArrayList<>();
-        String [] filesList = data.split("$");
+        String [] filesList = data.split("\\$");
        for(String s : filesList) {
            FileUpload tempFile;
            String[] f = s.split("!");
@@ -215,9 +218,13 @@ public class Client implements DataHandler{
            
            String[] temp2 = temp[1].split("#");
            tempFile.setHostAddress(temp2[0]);
+           temp2[1] = temp2[1].replace("$", "");
            tempFile.setPort(Integer.parseInt(temp2[1]));
            
            availableFileList.add(tempFile);
        }
+    }
+
+    public void queryData(String data, String method, String hostAddress) {
     }
 }
