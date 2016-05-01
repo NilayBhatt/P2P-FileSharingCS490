@@ -22,13 +22,15 @@ import java.util.logging.Logger;
 public class TcpClient extends Thread {
     
     final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
+    private String fileName;
 
+    private String hostAddress;
     // hard coded local address + port for testing now
     byte[] serverAddress = {127, 0, 0, 1};
     int port = 2010;
 
-    public TcpClient(String name, int port) {
-        super(name);
+    public TcpClient(String fileName, int port) {
+        super(fileName);
         this.port = port;
     }
 
@@ -37,7 +39,7 @@ public class TcpClient extends Thread {
         
         // set up socket
         try {
-            Socket socket = new Socket(InetAddress.getByName("localHost"), port);
+            Socket socket = new Socket(InetAddress.getByName(hostAddress), port);
             
             // set data to recieve
             byte[] data = new byte[BUFFER_SIZE];
@@ -45,7 +47,7 @@ public class TcpClient extends Thread {
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
             
-            File file = new File("//Users//Travis//TestNETWORKING2");
+            File file = new File(getFileName());
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();
@@ -67,5 +69,18 @@ public class TcpClient extends Thread {
 
         }
     
+    }
+    
+    public String getFileName() {
+        return this.fileName;
+    }
+    
+    public String setFileName(String s) {
+        this.fileName = s;
+        return this.fileName;
+    }
+    
+    public String getHostAddress() {
+        return this.hostAddress;
     }
 }

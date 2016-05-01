@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,11 +32,15 @@ public class TcpServer extends Thread {
     int port = 2010;
     
     private byte[] data;
+    
     private long fileLength;
     
-
-    public TcpServer(String name, int port) {
-        super(name);
+    private String fileName;
+    
+    private String serverAddress;
+    
+    public TcpServer(String clientName, int port) {
+        super(clientName);
         this.port = port;
     }
     
@@ -47,10 +52,10 @@ public class TcpServer extends Thread {
             Socket socket = serverSocket.accept();
             
             // set the address
-            InetAddress address = InetAddress.getByAddress(clientAddress);
+            InetAddress address = InetAddress.getByAddress(this.clientAddress);
             
             // set the file
-            File file = new File("//Users//Travis//pictures//6.png");
+            File file = new File(getFileName());
             FileInputStream fileIS = new FileInputStream(file);
             BufferedInputStream bufferIS = new BufferedInputStream(fileIS);
             
@@ -91,5 +96,26 @@ public class TcpServer extends Thread {
         
     }
     
+    public String getFileName() {
+        return this.fileName;
+    }
+    
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    } 
+    
+    public String getServerAddress() {
+        return this.serverAddress;
+    }
+    
+    public void setServerAddress() {
+                String serverAddress;
+        try {
+        serverAddress = InetAddress.getLocalHost().toString();
+        } catch(UnknownHostException e) {
+            e.printStackTrace();
+        }
+        
+    }
     
 }
