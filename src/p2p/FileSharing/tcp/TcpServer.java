@@ -21,14 +21,14 @@ import java.util.logging.Logger;
  *
  * @author Travis
  * 
- * tcp server delivers the file to the client after the directory server gives 
+ * TCP server delivers the file to the client after the directory server gives 
  * the address of the client
  */
 public class TcpServer extends Thread {
     
     final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
     
-    byte[] clientAddress = {127,0,0,1};
+//    byte[] clientAddress = {127,0,0,1};
     int port = 2010;
     
     private byte[] data;
@@ -39,9 +39,10 @@ public class TcpServer extends Thread {
     
     private String serverAddress;
     
-    public TcpServer(String clientName, int port) {
-        super(clientName);
+    public TcpServer(String clientAddress, int port, String fileName) {
+        super(clientAddress);
         this.port = port;
+        this.fileName = fileName;
     }
     
     public void run() {
@@ -49,46 +50,49 @@ public class TcpServer extends Thread {
         try {
             // create a socket
             ServerSocket serverSocket = new ServerSocket(port);
-            Socket socket = serverSocket.accept();
-            
-            // set the address
-            InetAddress address = InetAddress.getByAddress(this.clientAddress);
-            
-            // set the file
-            File file = new File(getFileName());
-            FileInputStream fileIS = new FileInputStream(file);
-            BufferedInputStream bufferIS = new BufferedInputStream(fileIS);
-            
-            // set up the output stream to client
-            OutputStream outputStream = socket.getOutputStream();
-            
-            // get file length
-            fileLength = file.length();
-            
-            // for tracking amount of file already sent intialize to 0 to start
-            long sentData = 0;
-            
-            while(sentData != fileLength) {
-                int sendSize = BUFFER_SIZE;
+            while(true) {
                 
-                // check the amout of data sent so far send next chuck or rest of file
-                if(fileLength - sentData >= sendSize) {
-                    sentData += sendSize;
-                } else {
-                    sendSize = (int) (fileLength - sentData);
-                    sentData = fileLength;
+                Socket clientSocket = serverSocket.accept();
+
+                // set the address
+    //            InetAddress address = InetAddress.getByAddress(clientAddress);
+
+                // set the file
+                File file = new File(fileName);
+                FileInputStream fileIS = new FileInputStream(file);
+                BufferedInputStream bufferIS = new BufferedInputStream(fileIS);
+
+                // set up the output stream to client
+                OutputStream outputStream = clientSocket.getOutputStream();
+
+                // get file length
+                fileLength = file.length();
+
+                // for tracking amount of file already sent intialize to 0 to start
+                long sentData = 0;
+
+                while(sentData != fileLength) {
+                    int sendSize = BUFFER_SIZE;
+
+                    // check the amout of data sent so far send next chuck or rest of file
+                    if(fileLength - sentData >= sendSize) {
+                        sentData += sendSize;
+                    } else {
+                        sendSize = (int) (fileLength - sentData);
+                        sentData = fileLength;
+                    }
+
+                    // send the new portion of the file
+                    data = new byte[sendSize];
+                    bufferIS.read(data, 0, sendSize);
+                    outputStream.write(data);
+
                 }
-                
-                // send the new portion of the file
-                data = new byte[sendSize];
-                bufferIS.read(data, 0, sendSize);
-                outputStream.write(data);
-                
+
+                outputStream.flush();
+                clientSocket.close();
+                serverSocket.close();
             }
-            
-            outputStream.flush();
-            socket.close();
-            serverSocket.close();
   
         } catch (IOException ex) {
             Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,22 +100,22 @@ public class TcpServer extends Thread {
         
     }
     
-    public String getFileName() {
-        return this.fileName;
-    }
-    
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    } 
-    
+//    public String getFileName() {
+//        return this.fileName;
+//    }
+//    
+//    public void setFileName(String fileName) {
+//        this.fileName = fileName;
+//    } 
+//    
     public String getServerAddress() {
         return this.serverAddress;
     }
     
     public void setServerAddress() {
-                String serverAddress;
+
         try {
-        serverAddress = InetAddress.getLocalHost().toString();
+        this.serverAddress = InetAddress.getLocalHost().toString();
         } catch(UnknownHostException e) {
             e.printStackTrace();
         }

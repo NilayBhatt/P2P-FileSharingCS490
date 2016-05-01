@@ -24,13 +24,15 @@ public class TcpClient extends Thread {
     final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
     private String fileName;
 
-    private String hostAddress;
-    // hard coded local address + port for testing now
-    byte[] serverAddress = {127, 0, 0, 1};
+    private String clientAddress;
+    
+    private String serverAddress;
+//    // hard coded local address + port for testing now
+//    byte[] serverAddress = {127, 0, 0, 1};
     int port = 2010;
 
-    public TcpClient(String fileName, int port) {
-        super(fileName);
+    public TcpClient(String serverAddress, int port) {
+        super(serverAddress);
         this.port = port;
     }
 
@@ -39,7 +41,7 @@ public class TcpClient extends Thread {
         
         // set up socket
         try {
-            Socket socket = new Socket(InetAddress.getByName(hostAddress), port);
+            Socket socket=  new Socket(InetAddress.getByName(serverAddress), port);
             
             // set data to recieve
             byte[] data = new byte[BUFFER_SIZE];
@@ -80,7 +82,11 @@ public class TcpClient extends Thread {
         return this.fileName;
     }
     
-    public String getHostAddress() {
-        return this.hostAddress;
+    public String getClientAddress() {
+        return this.clientAddress;
+    }
+    
+    public void setClientAddress(String hostAddress) {
+        this.clientAddress = hostAddress;
     }
 }

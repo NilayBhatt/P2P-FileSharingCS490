@@ -29,7 +29,6 @@ public class Main {
         System.out.println(filePath.getSharedFolderPath());
         
         try {
-<<<<<<< HEAD
 //            //Start receiver
 //            receiverThread = new RDT10Receiver("Receiver", 55000);
 //            receiverThread.start();
@@ -55,14 +54,13 @@ public class Main {
 //                Thread.sleep(10000);
 //            }
 
-            server = new TcpServer("serverThread", 2010);
+            server = new TcpServer(getClientAddress, 2010);
             server.start();
         
-            client = new TcpClient("clientThread", 2010);
+            client = new TcpClient(server.getServerAddress(), 2010);
             client.start();
             
-            
-=======
+
             //Start receiver
             //receiverThread = new RDT10Receiver("Receiver", 55000);
             //receiverThread.start();
@@ -83,7 +81,7 @@ public class Main {
                 //data = data.replace(" ", "%");
                 // Send the data
                 //sender.rdtSend(data.getBytes(), "add");
->>>>>>> NilayBranch
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
