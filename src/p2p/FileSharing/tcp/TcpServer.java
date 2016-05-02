@@ -29,8 +29,6 @@ public class TcpServer extends Thread {
     
     final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
     
-//    byte[] clientAddress = {127,0,0,1};
-    
     String clientAddress;
     
     int port = 2010;
@@ -54,7 +52,6 @@ public class TcpServer extends Thread {
     private OutputStream outputStream;
     
     public TcpServer(String clientAddress, int port, String fileName) {
-//        super(clientAddress);
         this.clientAddress = clientAddress;
         this.port = port;
         this.fileName = fileName;
@@ -132,33 +129,6 @@ public class TcpServer extends Thread {
   
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-        
-    }
-    
-    
-    
-    
-    
-    
-    public String getFileName() {
-        return this.fileName;
-    }
-    
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    } 
-    
-    public String getServerAddress() {
-        return this.serverAddress;
-    }
-    
-    public void setServerAddress() {
-
-        try {
-        this.serverAddress = InetAddress.getLocalHost().toString();
-        } catch(UnknownHostException e) {
-            e.printStackTrace();
         }
         
     }
