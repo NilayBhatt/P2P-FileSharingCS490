@@ -22,19 +22,26 @@ import java.util.logging.Logger;
 public class TcpClient extends Thread {
     
     final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
+    
     private String fileName;
+    
+    private FilePath filePath;
 
     private String clientAddress;
     
     private String serverAddress;
-//    // hard coded local address + port for testing now
-//    byte[] serverAddress = {127, 0, 0, 1};
-    int port = 2010;
 
+<<<<<<< HEAD
     public TcpClient(String serverAddress, int port) {
 //        super(serverAddress);
+=======
+    int port;
+
+    public TcpClient(String serverAddress, int port, String fileName) {
+>>>>>>> origin/tcp
         this.serverAddress = serverAddress;
         this.port = port;
+        this.fileName = fileName;
     }
 
     
@@ -52,7 +59,13 @@ public class TcpClient extends Thread {
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
             
+<<<<<<< HEAD
             File file = new File("C:\\Users\\Public\\TESTFILE.txt");
+=======
+            filePath = new FilePath();
+            // file will be saved to sharedfile folder in current directory of this application
+            File file = new File(filePath.getSharedFolderPath() + fileName);
+>>>>>>> origin/tcp
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();
@@ -93,11 +106,11 @@ public class TcpClient extends Thread {
                             e.printStackTrace();
                         }
                      break;
-//                     
-//                    case "400":
-//                        // bad request
-//                        
-//                        break;
+                     
+                    case 400:
+                        // bad request
+                        System.out.println("Bad Request");
+                        break;
                         
                     case 404:
                         // file not found
@@ -112,33 +125,12 @@ public class TcpClient extends Thread {
                         break;
                         
                     default: 
-                        // bad request 400
-                        System.out.println("Bad Request");
-                     
-            
+                        System.out.println("Something didn't work, no recieved file");
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-            
-            
-    
-    }
-    
-    public String getFileName() {
-        return "User/Travis/C1-3.txt";
-    }
-    
-    public String setFileName(String s) {
-        this.fileName = s;
-        return this.fileName;
-    }
-    
-    public String getClientAddress() {
-        return this.clientAddress;
-    }
-    
-    public void setClientAddress(String hostAddress) {
-        this.clientAddress = hostAddress;
+
     }
 }

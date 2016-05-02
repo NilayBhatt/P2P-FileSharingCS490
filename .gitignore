@@ -26,5 +26,11 @@ nbproject/private/private.xml
 *.class
 *.class
 *.class
+<<<<<<< HEAD
+>>>>>>> NilayBranch
+=======
+*.class
+*.class
+*.class
 >>>>>>> NilayBranch
 *.xml

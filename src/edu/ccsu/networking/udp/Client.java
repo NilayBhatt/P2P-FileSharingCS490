@@ -13,6 +13,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import p2p.FileSharing.tcp.FilePath;
+import p2p.FileSharing.tcp.TcpClient;
+import p2p.FileSharing.tcp.TcpServer;
 
 /**
  *
@@ -91,6 +94,9 @@ public class Client implements DataHandler{
     }
 
     public ArrayList<FileUpload> getAvailableFileList() {
+        if(availableFileList == null || availableFileList.isEmpty()){
+            return new ArrayList<FileUpload>();
+        }
         return availableFileList;
     }
 
@@ -130,7 +136,7 @@ public class Client implements DataHandler{
         }
         String rawData = makeRawPacketFileData(fileUploadList);
         try {
-            sender.rdtSend(rawData.getBytes(), "add");
+            sender.rdtSend((Integer.toString(clientSenderPort+2000) + "%" +rawData).getBytes(), "add");
         } catch (InterruptedException ex) {
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -177,7 +183,7 @@ public class Client implements DataHandler{
     
     public void RequestFileList() {
         try{
-            sender.rdtSend("List all Files".getBytes(), "get");
+            sender.rdtSend("List all Files \r\n".getBytes(), "qur");
         }  catch (UnknownHostException ex) {
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -205,7 +211,7 @@ public class Client implements DataHandler{
     @Override
     public void deliverList(String data) {
         availableFileList = new ArrayList<>();
-        String [] filesList = data.split("$");
+        String [] filesList = data.split("\\$");
        for(String s : filesList) {
            FileUpload tempFile;
            String[] f = s.split("!");
@@ -215,9 +221,48 @@ public class Client implements DataHandler{
            
            String[] temp2 = temp[1].split("#");
            tempFile.setHostAddress(temp2[0]);
+           temp2[1] = temp2[1].replace("$", "");
            tempFile.setPort(Integer.parseInt(temp2[1]));
            
            availableFileList.add(tempFile);
        }
+    }
+
+    public void queryData(String data, String method, String hostAddress) {
+    }
+
+    public void RequestFileFromClient(String fileName, String address, String port, String acceptingPort) throws SocketException, IOException, InterruptedException {
+        String fileRequest = clientReceiverPort + "%" + fileName + "\r\n";
+        try {
+            sender.startSender(address, Integer.parseInt(port));
+            sender.rdtSend(fileRequest.getBytes(), "get");
+            
+            try {
+            TcpClient tcpClient = new TcpClient(address, Integer.parseInt(port), fileName);
+            tcpClient.start();
+        
+        } catch (Exception e) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+        }
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+    }
+
+    @Override
+    public void requestFile(String data, String hostAddress, String port) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        // Make/ get the shared folder if not there to specify where all files should be. 
+        FilePath filePath = new FilePath();
+        filePath.makeSharedDirectory();
+
+        TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath + data));
+        tcpServer.start();
+        
+        
     }
 }

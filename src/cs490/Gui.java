@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import javafx.util.Pair;
@@ -27,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
 public class Gui extends javax.swing.JFrame {
 
     //private RDT10Sender sender = new RDT10Sender();
-    private Client client;
+    private Client client, clientLeecher;
     private File[] sf;
     private DirectoryServer server;
 
@@ -221,6 +222,11 @@ public class Gui extends javax.swing.JFrame {
                 "File Name", "File Size", "Host Address", "Host Port"
             }
         ));
+        availableDownloadsTable.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                availableDownloadsTableComponentAdded(evt);
+            }
+        });
         jScrollPane1.setViewportView(availableDownloadsTable);
 
         downloadFileButton.setText("Download Selected File");
@@ -417,25 +423,38 @@ public class Gui extends javax.swing.JFrame {
 
     private void clientConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientConnectToServerActionPerformed
         String serverIP = clientServerConnect.getText();
-        client = new Client();
-        client.setClientSenderPort(5010);
-        client.setClientReceiverPort(3010);
-        client.setServerAddress(serverIP);
-        client.setServerReceiverPort(2010);
-        client.startClientSender();
-        client.RequestFileList();
-        DefaultTableModel tableModel = new DefaultTableModel();
-        availableDownloadsTable.setModel(tableModel);
-        ArrayList<FileUpload> serverFiles = (ArrayList<FileUpload>) client.getAvailableFileList();
+        clientLeecher = new Client();
+        clientLeecher.setClientSenderPort(4010);
+        clientLeecher.setClientReceiverPort(6010);
+        clientLeecher.setServerAddress(serverIP);
+        clientLeecher.setServerReceiverPort(2010);
+        clientLeecher.startClientSender();
+        clientLeecher.startClientReceiver(3010);
+        //server.startReceiver(3010);
+        clientLeecher.RequestFileList();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultTableModel tableModel2 = (DefaultTableModel) availableDownloadsTable.getModel();
+        ArrayList<FileUpload> serverFiles = new ArrayList<>();
+        serverFiles = clientLeecher.getAvailableFileList();
         for(FileUpload f : serverFiles) {
             String[] temp = {f.getFileName(), Integer.toString((int)f.getFileSize()), f.getHostAddress(), Integer.toString(f.getPort())};
-            tableModel.addRow(temp);
+            System.out.println("Adding this to the DataTable: ");
+                System.out.println(temp.toString());
+            tableModel2.addRow(temp);
         }
     }//GEN-LAST:event_clientConnectToServerActionPerformed
 
     private void clientServerConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientServerConnectActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_clientServerConnectActionPerformed
+
+    private void availableDownloadsTableComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_availableDownloadsTableComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_availableDownloadsTableComponentAdded
 
     /**
      * @param args the command line arguments
