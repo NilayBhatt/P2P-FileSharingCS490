@@ -371,7 +371,7 @@ public class Gui extends javax.swing.JFrame {
             //server.startSender();
             //client = new Client();
             client.setServerAddress(serverIPAddress.getText());
-            client.setServerReceiverPort(Integer.parseInt(startServerPort.getText()));
+            client.setServerReceiverPort(2010);
             client.setClientSenderPort(Integer.parseInt(clientPort.getText()));
             client.startClientSender();
             client.startClientReceiver(Integer.parseInt(clientPort.getText())+2000);
@@ -418,7 +418,18 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_startServerButtonActionPerformed
 
     private void downloadFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadFileButtonActionPerformed
-        // TODO add your handling code here:
+        int row = availableDownloadsTable.getSelectedRow();
+        String fileName = (String)availableDownloadsTable.getModel().getValueAt(row, 0);
+        String address = (String)availableDownloadsTable.getModel().getValueAt(row, 2);
+        String port = (String)availableDownloadsTable.getModel().getValueAt(row, 3);
+        try {
+            clientLeecher.RequestFileFromClient(fileName, address, port);
+            //clientLeecher.RequestFileFromClient(null, null, null, null);
+        } catch (IOException ex) {
+            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_downloadFileButtonActionPerformed
 
     private void clientConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientConnectToServerActionPerformed

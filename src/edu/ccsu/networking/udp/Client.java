@@ -231,7 +231,7 @@ public class Client implements DataHandler{
     public void queryData(String data, String method, String hostAddress) {
     }
 
-    public void RequestFileFromClient(String fileName, String address, String port, String acceptingPort) throws SocketException, IOException, InterruptedException {
+    public void RequestFileFromClient(String fileName, String address, String port) throws SocketException, IOException, InterruptedException {
         String fileRequest = clientReceiverPort + "%" + fileName + "\r\n";
         try {
             sender.startSender(address, Integer.parseInt(port));
