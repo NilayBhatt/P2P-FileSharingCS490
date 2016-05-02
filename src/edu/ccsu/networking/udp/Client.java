@@ -168,7 +168,7 @@ public class Client implements DataHandler{
      */
     public void Kill() {
         try {
-            sender.rdtSend(sender.getHost().getBytes(), "kill");
+            sender.rdtSend((sender.getHost() +"\r\n").getBytes() , "kill");
         } catch (UnknownHostException ex) {
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -237,9 +237,12 @@ public class Client implements DataHandler{
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @Override
     public void requestFile(String data, String hostAddress, String port) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+    }
+    public void killConnection(String hostAddress) {
+     
     }
 }

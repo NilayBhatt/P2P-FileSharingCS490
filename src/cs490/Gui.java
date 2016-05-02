@@ -369,7 +369,7 @@ public class Gui extends javax.swing.JFrame {
             //server.startSender();
             //client = new Client();
             client.setServerAddress(serverIPAddress.getText());
-            client.setServerReceiverPort(Integer.parseInt(startServerPort.getText()));
+            client.setServerReceiverPort(2010);
             client.setClientSenderPort(Integer.parseInt(clientPort.getText()));
             client.startClientSender();
             client.startClientReceiver(Integer.parseInt(clientPort.getText())+2000);
@@ -382,7 +382,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_syncFilesActionPerformed
 
     private void killConnectionToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_killConnectionToServerActionPerformed
-        // TODO add your handling code here:
+        client.Kill();
     }//GEN-LAST:event_killConnectionToServerActionPerformed
 
     private void serverIPAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverIPAddressActionPerformed
@@ -431,7 +431,7 @@ public class Gui extends javax.swing.JFrame {
         //server.startReceiver(3010);
         clientLeecher.RequestFileList();
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         }

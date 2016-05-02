@@ -71,6 +71,8 @@ public class RDT10Receiver implements Runnable {
                 dataHandler.deliverList(finalData);
             } else if(stringMethod.contains("get")){
                 
+            } else if(stringMethod.contains("kill")) {
+                dataHandler.killConnection(hostAddress);
             }
             // Resetting whole data to start listening again
             finalData = "";

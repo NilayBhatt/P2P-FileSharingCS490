@@ -153,5 +153,14 @@ public class DirectoryServer implements DataHandler {
     }
     public void requestFile(String data, String hostAddress, String port) {
     }
+
+    @Override
+    public void killConnection(String hostAddress) {
+        for(FileUpload f : fileList) {
+            if(f.getHostAddress() == hostAddress) {
+                fileList.remove(f);
+            }
+        }
+    }
     
 }
