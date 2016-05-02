@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import p2p.FileSharing.tcp.TcpClient;
 
 /**
  *
@@ -240,6 +241,16 @@ public class Client implements DataHandler{
 
     @Override
     public void requestFile(String data, String hostAddress, String port) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        try {
+            TcpClient tcpClient = new TcpClient(hostAddress, Integer.parseInt(port), data);
+            tcpClient.start();
+        
+        } catch (Exception e) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        
     }
 }

@@ -29,7 +29,7 @@ public class Timer {
     public Timer() {
         // set up initial values
         timeOutInterval = 1000;
-        estimatedRTT = 900;
+        estimatedRTT = 100;
         sampleRTT = estimatedRTT;
         devRTT = 0;
         startTime = 0;

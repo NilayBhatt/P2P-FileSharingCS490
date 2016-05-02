@@ -55,7 +55,7 @@ public class TcpClient extends Thread {
             // hard coded file for testing.
             
             filePath = new FilePath();
-            
+            // file will be saved to sharedfile folder in current directory of this application
             File file = new File(filePath.getSharedFolderPath() + fileName);
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
@@ -97,11 +97,11 @@ public class TcpClient extends Thread {
                             e.printStackTrace();
                         }
                      break;
-//                     
-//                    case "400":
-//                        // bad request
-//                        
-//                        break;
+                     
+                    case 400:
+                        // bad request
+                        System.out.println("Bad Request");
+                        break;
                         
                     case 404:
                         // file not found
@@ -116,10 +116,8 @@ public class TcpClient extends Thread {
                         break;
                         
                     default: 
-                        // bad request 400
-                        System.out.println("Bad Request");
-                     
-            
+                        System.out.println("Something didn't work, no recieved file");
+
             }
         } catch (IOException e) {
             e.printStackTrace();
