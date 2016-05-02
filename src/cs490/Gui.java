@@ -421,6 +421,7 @@ public class Gui extends javax.swing.JFrame {
         int row = availableDownloadsTable.getSelectedRow();
         String fileName = (String)availableDownloadsTable.getModel().getValueAt(row, 0);
         String address = (String)availableDownloadsTable.getModel().getValueAt(row, 2);
+        address = address.replace("/", "");
         String port = (String)availableDownloadsTable.getModel().getValueAt(row, 3);
         try {
             clientLeecher.RequestFileFromClient(fileName, address, port);
