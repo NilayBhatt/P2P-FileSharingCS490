@@ -30,8 +30,8 @@ public class TcpClient extends Thread {
     private String clientAddress;
     
     private String serverAddress;
-
-    int port;
+    
+    private int port;
 
     public TcpClient(String serverAddress, int port, String fileName) {
         this.serverAddress = serverAddress;
@@ -44,7 +44,7 @@ public class TcpClient extends Thread {
         
         // set up socket
         try {
-            Socket socket=  new Socket(InetAddress.getByName(serverAddress), port);
+            Socket socket =  new Socket(InetAddress.getByName(serverAddress), port);
             
             // set data to recieve
             byte[] data = new byte[BUFFER_SIZE];

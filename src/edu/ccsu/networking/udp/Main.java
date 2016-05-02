@@ -55,17 +55,23 @@ public class Main {
 //            }
 
 //            server = new TcpServer("192.168.1.5", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
-//            server.start();
-        
+//            s        
 //            client = new TcpClient("192.168.1.5", 2010);
 //            client.start();
 //            server = new TcpServer("192.168.1.6", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
 //            server.start();
+
+//        
+//            client = new TcpClient("192.168.1.5", 2010);
+//            client.start();
+
+//            server = new TcpServer("192.168.1.6", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
+//            server.start();
+
         
 //            client = new TcpClient("192.168.1.6", 2010);
 //            client.start();
 
-            
 
             //Start receiver
             //receiverThread = new RDT10Receiver("Receiver", 55000);
