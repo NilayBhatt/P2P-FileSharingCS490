@@ -13,7 +13,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import p2p.FileSharing.tcp.FilePath;
 import p2p.FileSharing.tcp.TcpClient;
+import p2p.FileSharing.tcp.TcpServer;
 
 /**
  *
@@ -234,22 +236,32 @@ public class Client implements DataHandler{
         try {
             sender.startSender(address, Integer.parseInt(port));
             sender.rdtSend(fileRequest.getBytes(), "get");
+            
+            try {
+            TcpClient tcpClient = new TcpClient(address, Integer.parseInt(port), fileName);
+            tcpClient.start();
+        
+        } catch (Exception e) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+        }
         } catch (UnknownHostException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+        
     }
 
     @Override
     public void requestFile(String data, String hostAddress, String port) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         
-        try {
-            TcpClient tcpClient = new TcpClient(hostAddress, Integer.parseInt(port), data);
-            tcpClient.start();
-        
-        } catch (Exception e) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
-        }
+        // Make/ get the shared folder if not there to specify where all files should be. 
+        FilePath filePath = new FilePath();
+        filePath.makeSharedDirectory();
+
+        TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath + data));
+        tcpServer.start();
         
         
     }
