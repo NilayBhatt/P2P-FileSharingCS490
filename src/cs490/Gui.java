@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 public class Gui extends javax.swing.JFrame {
 
     //private RDT10Sender sender = new RDT10Sender();
-    private Client client;
+    private Client client, clientLeecher;
     private File[] sf;
     private DirectoryServer server;
 
@@ -421,15 +421,15 @@ public class Gui extends javax.swing.JFrame {
 
     private void clientConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientConnectToServerActionPerformed
         String serverIP = clientServerConnect.getText();
-        client = new Client();
-        client.setClientSenderPort(5010);
-        client.setClientReceiverPort(3010);
-        client.setServerAddress(serverIP);
-        client.setServerReceiverPort(2010);
-        client.startClientSender();
-        client.startClientReceiver(3010);
+        clientLeecher = new Client();
+        clientLeecher.setClientSenderPort(4010);
+        clientLeecher.setClientReceiverPort(6010);
+        clientLeecher.setServerAddress(serverIP);
+        clientLeecher.setServerReceiverPort(2010);
+        clientLeecher.startClientSender();
+        clientLeecher.startClientReceiver(3010);
         //server.startReceiver(3010);
-        client.RequestFileList();
+        clientLeecher.RequestFileList();
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
@@ -437,7 +437,7 @@ public class Gui extends javax.swing.JFrame {
         }
         DefaultTableModel tableModel2 = (DefaultTableModel) availableDownloadsTable.getModel();
         ArrayList<FileUpload> serverFiles = new ArrayList<>();
-        serverFiles = client.getAvailableFileList();
+        serverFiles = clientLeecher.getAvailableFileList();
         for(FileUpload f : serverFiles) {
             String[] temp = {f.getFileName(), Integer.toString((int)f.getFileSize()), f.getHostAddress(), Integer.toString(f.getPort())};
             System.out.println("Adding this to the DataTable: ");

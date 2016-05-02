@@ -227,4 +227,19 @@ public class Client implements DataHandler{
 
     public void queryData(String data, String method, String hostAddress) {
     }
+
+    public void RequestFileFromClient(String fileName, String address, String port, String acceptingPort) throws SocketException, IOException, InterruptedException {
+        String fileRequest = clientReceiverPort + "%" + fileName + "\r\n";
+        try {
+            sender.startSender(address, Integer.parseInt(port));
+            sender.rdtSend(fileRequest.getBytes(), "get");
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void requestFile(String data, String hostAddress, String port) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

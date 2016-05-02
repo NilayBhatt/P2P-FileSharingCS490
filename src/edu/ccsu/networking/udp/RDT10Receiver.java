@@ -69,6 +69,8 @@ public class RDT10Receiver implements Runnable {
                 dataHandler.queryData(finalData, new String(method), hostAddress);
             } else if(stringMethod.contains("lst")) {
                 dataHandler.deliverList(finalData);
+            } else if(stringMethod.contains("get")){
+                
             }
             // Resetting whole data to start listening again
             finalData = "";

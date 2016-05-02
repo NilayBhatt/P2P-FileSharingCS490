@@ -14,4 +14,5 @@ public interface DataHandler {
     public void deliverData(String data, String method, String hostAddress, int hostPort);
     public void deliverList(String data);
     public void queryData (String data, String method, String hostAddress);
+    public void requestFile(String data, String hostAddress, String port);
 }

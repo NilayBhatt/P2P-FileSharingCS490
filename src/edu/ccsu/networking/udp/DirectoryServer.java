@@ -151,5 +151,7 @@ public class DirectoryServer implements DataHandler {
         }
         
     }
+    public void requestFile(String data, String hostAddress, String port) {
+    }
     
 }
