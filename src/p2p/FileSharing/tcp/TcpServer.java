@@ -30,6 +30,9 @@ public class TcpServer extends Thread {
     final int BUFFER_SIZE =  8192; // 8k bytes of buffer 
     
 //    byte[] clientAddress = {127,0,0,1};
+    
+    String clientAddress;
+    
     int port = 2010;
     
     private byte[] data;
@@ -50,8 +53,10 @@ public class TcpServer extends Thread {
     
     private OutputStream outputStream;
     
-    public TcpServer(String clientAddress, String fileName) {
-        super(clientAddress);
+    public TcpServer(String clientAddress, int port, String fileName) {
+//        super(clientAddress);
+        this.clientAddress = clientAddress;
+        this.port = port;
         this.fileName = fileName;
     }   
     
@@ -59,15 +64,13 @@ public class TcpServer extends Thread {
            
         try {
             // create a socket
-            ServerSocket serverSocket = new ServerSocket(port);
-            while(true) {
-                
+
+                ServerSocket serverSocket = new ServerSocket(port);
                 Socket clientSocket = serverSocket.accept();
-                // set up the output stream to client
-                outputStream = clientSocket.getOutputStream();
+                
 
                 // set the address
-    //            InetAddress address = InetAddress.getByAddress(clientAddress);
+                InetAddress address = InetAddress.getByName(clientAddress);
 
                 // set the file
                 try {
@@ -75,26 +78,18 @@ public class TcpServer extends Thread {
                     fileIS = new FileInputStream(file);
                     bufferIS = new BufferedInputStream(fileIS);
                     
-                // if file not found
-                    
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    httpStatus = Integer.toString(404).getBytes();
-                    outputStream.write(httpStatus);
-                }
+                // set up the output stream to client
+                outputStream = clientSocket.getOutputStream();
                 
-
                 // get file length
                 fileLength = file.length();
 
                 // for tracking amount of file already sent intialize to 0 to start
                 long sentData = 0;
-                
-                
+
                 // flag for sending status code
                 boolean flag = false;
-                
-                
+  
                 while(sentData != fileLength) {
                     int sendSize = BUFFER_SIZE;
 
@@ -117,18 +112,34 @@ public class TcpServer extends Thread {
                     bufferIS.read(data, 0, sendSize);
                     outputStream.write(data);
 
+                } 
+                    
+                    
+                // if file not found
+                    
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    httpStatus = Integer.toString(404).getBytes();
+                    outputStream.write(httpStatus);
                 }
+
+
 
                 outputStream.flush();
                 clientSocket.close();
                 serverSocket.close();
-            }
+            
   
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
     }
+    
+    
+    
+    
+    
     
     public String getFileName() {
         return this.fileName;

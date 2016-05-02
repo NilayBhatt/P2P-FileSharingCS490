@@ -51,7 +51,7 @@ public class TcpClient extends Thread {
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
             
-            File file = new File(getFileName());
+            File file = new File("//Users/Travis/SomeNewFile");
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();
@@ -64,17 +64,17 @@ public class TcpClient extends Thread {
             
             if (!flag) {
                 try {
-                receivedData = inputStream.read(httpStatus, 0, (Integer.SIZE / 8));
+                receivedData = inputStream.read(httpStatus, 0, (Integer.SIZE / 8) -1 );
                 flag = true;
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
             
-            String httpString = new String(httpStatus);
+            String httpString = new String(httpStatus).trim();
             
-            switch (httpString) {
-                    case "200":
+            switch (Integer.parseInt(httpString)) {
+                    case 200:
                         // OK - so read file
                         try {
                             while((receivedData = inputStream.read(data)) != -1 ) {
@@ -98,13 +98,13 @@ public class TcpClient extends Thread {
 //                        
 //                        break;
                         
-                    case "404":
+                    case 404:
                         // file not found
                         System.out.println("File not found");
                         
                         break;
                         
-                    case "505":
+                    case 505:
                         // HTTP Version Not Supported
                         System.out.println("HTTP version not supported");
                         
@@ -125,7 +125,7 @@ public class TcpClient extends Thread {
     }
     
     public String getFileName() {
-        return this.fileName;
+        return "User/Travis/C1-3.txt";
     }
     
     public String setFileName(String s) {
