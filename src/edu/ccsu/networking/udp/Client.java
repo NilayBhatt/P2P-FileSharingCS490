@@ -247,9 +247,7 @@ public class Client implements DataHandler{
         } catch (UnknownHostException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+    
     }
 
     @Override
@@ -262,7 +260,6 @@ public class Client implements DataHandler{
 
         TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath + data));
         tcpServer.start();
-        
-        
+   
     }
 }
