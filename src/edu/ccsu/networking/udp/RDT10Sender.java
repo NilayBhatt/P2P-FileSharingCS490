@@ -62,7 +62,8 @@ public class RDT10Sender {
      */
     public void rdtSend(byte[] data, String methodName) throws SocketException, IOException, InterruptedException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
-        int packetNumber = 0;
+        double totalPacket = Math.ceil(data.length/128.0);
+        int packetNumber = 1;
         Timer timer = new Timer();
 
         while (byteStream.available() > 0) {
@@ -77,8 +78,9 @@ public class RDT10Sender {
             byte[] modPacketData = addAckToData(senderack, packetDataWMethod);
             DatagramPacket packet = new DatagramPacket(modPacketData, modPacketData.length, internetAddress, receiverPortNumber);
             System.out.println("### Sender sending packet: " + new String(packetData) + "'");
+            System.out.println("Packet Number: "+ packetNumber + "out of " +totalPacket);
             boolean sending = true;
-            
+            packetNumber ++;
             while (sending) {
                 try {
                     socket.send(packet);

@@ -40,6 +40,7 @@ public class DirectoryServer implements DataHandler {
             this.clientAddress = clientAddress;
             this.clientPort = clientPort;
             this.serverPort = serverPort;
+            serverSender = new RDT10Sender(serverPort);
             serverSender.startSender(clientAddress, clientPort);
         } catch (SocketException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,22 +116,6 @@ public class DirectoryServer implements DataHandler {
                 add(fileObject);
             }
         }
-        
-        if(method.contains("get")) {
-            if(fileList == null || fileList.isEmpty()){
-                
-            }else {
-                String files = makePacketFileList();
-                startSender(clientAddress, 3010, 6010);
-                try {
-                    serverSender.rdtSend(files.getBytes(), "lst");
-                } catch (IOException ex) {
-                    Logger.getLogger(DirectoryServer.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(DirectoryServer.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
     }
     
     public String makePacketFileList() {
@@ -138,10 +123,35 @@ public class DirectoryServer implements DataHandler {
         for(FileUpload file : fileList) {
             fileString += file.toString();
         }
-        return fileString;
+        return fileString +"\r\n";
     }
     
     public void deliverList(String data) {
+    }
+
+    @Override
+    public void queryData(String data, String method, String hostAddress) {
+        if(method.contains("qur")) {
+            if(fileList == null || fileList.isEmpty()){
+                
+            }else {
+                String files = makePacketFileList();
+                try {
+                    hostAddress = hostAddress.replace("/","");
+                    startSender(hostAddress, 3010, 6010);
+                    serverSender.rdtSend(files.getBytes(), "lst");
+                } catch (IOException ex) {
+                    Logger.getLogger(DirectoryServer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(DirectoryServer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+    }
+    public void requestFile(String data, String hostAddress, String port) {
     }
     
 }
