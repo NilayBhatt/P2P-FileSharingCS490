@@ -53,10 +53,12 @@ public class TcpClient extends Thread {
             
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
-            
+
+
             filePath = new FilePath();
             // file will be saved to sharedfile folder in current directory of this application
             File file = new File(filePath.getSharedFolderPath() + fileName);
+
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();
