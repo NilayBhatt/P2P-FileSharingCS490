@@ -241,14 +241,17 @@ public class Client implements DataHandler{
             TcpClient tcpClient = new TcpClient(address, Integer.parseInt(port), fileName);
             tcpClient.start();
         
-        } catch (Exception e) {
+            } catch (Exception e) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, e);
+            }
+            
         } catch (UnknownHostException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
      
 
     }
+    
 
     @Override
     public void requestFile(String data, String hostAddress, String port) {
