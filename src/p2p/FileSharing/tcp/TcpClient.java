@@ -32,7 +32,8 @@ public class TcpClient extends Thread {
     int port = 2010;
 
     public TcpClient(String serverAddress, int port) {
-        super(serverAddress);
+//        super(serverAddress);
+        this.serverAddress = serverAddress;
         this.port = port;
     }
 
@@ -51,7 +52,7 @@ public class TcpClient extends Thread {
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
             
-            File file = new File("//Users/Travis/SomeNewFile");
+            File file = new File("C:\\Users\\Public\\TESTFILE.txt");
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();

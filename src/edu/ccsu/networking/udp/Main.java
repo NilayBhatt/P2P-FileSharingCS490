@@ -54,10 +54,10 @@ public class Main {
 //                Thread.sleep(10000);
 //            }
 
-            server = new TcpServer("localhost", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
-            server.start();
+//            server = new TcpServer("192.168.1.5", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
+//            server.start();
         
-            client = new TcpClient("localhost", 2010);
+            client = new TcpClient("192.168.1.5", 2010);
             client.start();
             
 
