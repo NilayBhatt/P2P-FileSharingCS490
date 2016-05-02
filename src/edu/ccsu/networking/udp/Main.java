@@ -54,20 +54,18 @@ public class Main {
 //                Thread.sleep(10000);
 //            }
 
-<<<<<<< HEAD
 //            server = new TcpServer("192.168.1.5", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
 //            server.start();
-        
-            client = new TcpClient("192.168.1.5", 2010);
-            client.start();
-=======
+//        
+//            client = new TcpClient("192.168.1.5", 2010);
+//            client.start();
+
             server = new TcpServer("192.168.1.6", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
             server.start();
         
 //            client = new TcpClient("192.168.1.6", 2010);
 //            client.start();
->>>>>>> origin/tcp
-            
+
 
             //Start receiver
             //receiverThread = new RDT10Receiver("Receiver", 55000);

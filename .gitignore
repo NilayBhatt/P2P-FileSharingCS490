@@ -34,3 +34,6 @@ nbproject/private/private.xml
 *.class
 >>>>>>> NilayBranch
 *.xml
+*.properties
+build/classes/cs490/Gui$1.class
+*.class

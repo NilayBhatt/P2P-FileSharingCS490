@@ -30,15 +30,12 @@ public class TcpClient extends Thread {
     private String clientAddress;
     
     private String serverAddress;
+    
+    private int port;
 
-<<<<<<< HEAD
-    public TcpClient(String serverAddress, int port) {
-//        super(serverAddress);
-=======
-    int port;
+
 
     public TcpClient(String serverAddress, int port, String fileName) {
->>>>>>> origin/tcp
         this.serverAddress = serverAddress;
         this.port = port;
         this.fileName = fileName;
@@ -49,7 +46,7 @@ public class TcpClient extends Thread {
         
         // set up socket
         try {
-            Socket socket=  new Socket(InetAddress.getByName(serverAddress), port);
+            Socket socket =  new Socket(InetAddress.getByName(serverAddress), port);
             
             // set data to recieve
             byte[] data = new byte[BUFFER_SIZE];
@@ -58,14 +55,10 @@ public class TcpClient extends Thread {
             
             // get file & file output stream to write to file from incoming data
             // hard coded file for testing.
-            
-<<<<<<< HEAD
-            File file = new File("C:\\Users\\Public\\TESTFILE.txt");
-=======
+
             filePath = new FilePath();
             // file will be saved to sharedfile folder in current directory of this application
             File file = new File(filePath.getSharedFolderPath() + fileName);
->>>>>>> origin/tcp
             FileOutputStream fileOS = new FileOutputStream(file);
             BufferedOutputStream bufferedOS = new BufferedOutputStream(fileOS);
             InputStream inputStream = socket.getInputStream();
