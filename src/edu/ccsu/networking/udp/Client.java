@@ -104,10 +104,10 @@ public class Client implements DataHandler{
         this.availableFileList = availableFileList;
     }
 
-    public void startClientSender() {
+    public void startClientSender(boolean slow) {
         try {
             sender = new RDT10Sender(clientSenderPort);
-            sender.startSender(serverAddress, serverReceiverPort);
+            sender.startSender(serverAddress, serverReceiverPort, slow);
         } catch (SocketException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownHostException ex) {
@@ -231,12 +231,12 @@ public class Client implements DataHandler{
     public void queryData(String data, String method, String hostAddress) {
     }
 
-    public void RequestFileFromClient(String fileName, String address, String port) throws SocketException, IOException, InterruptedException {
+    public void RequestFileFromClient(String fileName, String address, String port, boolean slow) throws SocketException, IOException, InterruptedException {
         int tempPort = Integer.parseInt(port);
         tempPort = tempPort -2000;
         String fileRequest = tempPort +"#" + fileName + "\r\n";
         try {
-            sender.startSender(address, Integer.parseInt(port));
+            sender.startSender(address, Integer.parseInt(port), slow);
             sender.rdtSend(fileRequest.getBytes(), "get");
             
             try {
