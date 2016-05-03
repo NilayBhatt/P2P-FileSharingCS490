@@ -264,7 +264,7 @@ public class Client implements DataHandler{
         filePath.makeSharedDirectory();
         hostAddress = hostAddress.replace("/", "");
 
-        TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath + data) );
+        TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath.getSharedFolderPath() + data) );
         tcpServer.start();
 
     }
