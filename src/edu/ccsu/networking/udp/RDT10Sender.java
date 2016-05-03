@@ -68,6 +68,7 @@ public class RDT10Sender {
         double totalPacket = Math.ceil(data.length / 128.0);
         int packetNumber = 1;
         Timer timer = new Timer();
+        timer.printTimer();
 
         while (byteStream.available() > 0) {
             byte[] packetData = new byte[packetDataSize];
@@ -86,20 +87,23 @@ public class RDT10Sender {
             packetNumber++;
             while (sending) {
                 try {
+                    // Minor pause for easier visualization only
+                    if (slowMode) {
+                        Thread.sleep(4000);
+                    }
                     socket.send(packet);
                     //Start the timer to capture sample RTT.
                     timer.startTimer();
                     //Gets the time Out interval (dynamic)
                     socket.setSoTimeout((int) timer.getTimeOutInterval());
-                    // Minor pause for easier visualization only
-                    if (slowMode) {
-                        Thread.sleep(1200);
-                    }
+          
                     if (receiveAck()) {
                         //If we got the ack then stop the timer to collect the sample.
                         timer.stopTimer();
                         // Update the time out interval for the second trip to send.
                         timer.updateTimeOutInterval();
+                        timer.printTimer();
+                        
                         sending = false;
                     }
                 } catch (SocketTimeoutException e) {
@@ -107,6 +111,7 @@ public class RDT10Sender {
                     System.out.println("Resending...");
                     // handle a timout and reset the timer to new value
                     timer.timerTimeOut();
+                    timer.printTimer();
                     socket.setSoTimeout((int)timer.getTimeOutInterval());
                     continue;
                 }

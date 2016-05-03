@@ -12,39 +12,5 @@ nb-configuration.xml
 refs/remotes/origin/timer
 !/build/
 *.class
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 nbproject/private/private.properties
-
-nbproject/private/private.xml
-=======
-*.class
->>>>>>> NilayBranch
-=======
-*.class
-*.class
-*.class
-*.class
-<<<<<<< HEAD
->>>>>>> NilayBranch
-=======
-*.class
-*.class
-*.class
->>>>>>> NilayBranch
-*.xml
-*.properties
-build/classes/cs490/Gui$1.class
-*.class
-
-build/built-jar.properties
-
-build/classes/cs490/Gui.class
-
-build/classes/cs490/Gui$1.class
-
-*.class
-*.class
-*.class
-SharedFolder/nilayawesome.png
