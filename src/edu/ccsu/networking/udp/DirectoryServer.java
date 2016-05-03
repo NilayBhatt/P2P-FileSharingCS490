@@ -153,5 +153,16 @@ public class DirectoryServer implements DataHandler {
     }
     public void requestFile(String data, String hostAddress, String port) {
     }
+
+    @Override
+    public void killConnection(String data, String hostAddress) {
+       hostAddress = hostAddress.replace("/", "");
+       for(FileUpload f : fileList) {
+           if(f.getHostAddress().contains(hostAddress)){
+               fileList.remove(f);
+           }
+       }
+       System.out.println("\n\n\n Removed all the files associated with IP: " + hostAddress);
+    }
     
 }

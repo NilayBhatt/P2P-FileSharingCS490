@@ -65,7 +65,7 @@ public class RDT10Sender {
      */
     public void rdtSend(byte[] data, String methodName) throws SocketException, IOException, InterruptedException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
-        double totalPacket = Math.ceil(data.length / 128.0) + 1;
+        double totalPacket = Math.ceil(data.length / 125.0) + 1;
         int packetNumber = 1;
         Timer timer = new Timer();
         timer.printTimer();

@@ -14,3 +14,5 @@ refs/remotes/origin/timer
 *.class
 
 nbproject/private/private.properties
+*.class
+build/classes/edu/ccsu/networking/udp/RDT10Sender.class

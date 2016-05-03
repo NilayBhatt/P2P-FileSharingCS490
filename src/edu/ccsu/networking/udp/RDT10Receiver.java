@@ -76,6 +76,9 @@ public class RDT10Receiver implements Runnable {
                 String [] temp = finalData.split("#");
                 System.out.println("\n\nRouting get data to the p2p server...");
                 dataHandler.requestFile(temp[1], hostAddress, temp[0]);
+            } else if(stringMethod.contains("kil")){
+                System.out.println("\n\nRouting get data to the p2p server...");
+                dataHandler.killConnection(finalData, hostAddress);
             }
             // Resetting whole data to start listening again
             finalData = "";

@@ -171,7 +171,7 @@ public class Client implements DataHandler{
      */
     public void Kill() {
         try {
-            sender.rdtSend(sender.getHost().getBytes(), "kill");
+            sender.rdtSend(sender.getHost().getBytes(), "kil");
         } catch (UnknownHostException ex) {
             Logger.getLogger(RDT10Sender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -267,5 +267,8 @@ public class Client implements DataHandler{
         TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath.getSharedFolderPath() + data) );
         tcpServer.start();
 
+    }
+
+    public void killConnection(String data, String hostAddress) {
     }
 }
