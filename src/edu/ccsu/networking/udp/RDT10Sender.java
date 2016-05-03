@@ -100,6 +100,9 @@ public class RDT10Sender {
                 } catch (SocketTimeoutException e) {
                     System.out.println("We got a time out for packet: " + new String(packet.getData()));
                     System.out.println("Resending...");
+                    // handle a timout and reset the timer to new value
+                    timer.timerTimeOut();
+                    socket.setSoTimeout((int)timer.getTimeOutInterval());
                     continue;
                 }
             }

@@ -54,8 +54,8 @@ public class Timer {
     }
     
     public long updateTimeOutInterval() {
-        long updatedEstRTT = updateEstimatedRTT();
-        float updatedDevRTT = updateDevRTT();
+        this.estimatedRTT = updateEstimatedRTT();
+        this.devRTT = updateDevRTT();
        return this.timeOutInterval = (long) ceil(this.getEstimatedRTT() + 
                 (DEV_WEIGHT * this.devRTT));
     }
