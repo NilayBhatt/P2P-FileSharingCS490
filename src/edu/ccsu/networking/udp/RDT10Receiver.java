@@ -61,16 +61,20 @@ public class RDT10Receiver implements Runnable {
         if (finalData.endsWith("\r\n")) {
             finalData = finalData.replace("\r\n", "");
             //finalData += endPacket;
-            System.out.println("@@@ Receiver delivered packet with: '" + finalData + "'");
+            System.out.println("\n\n\n@@@ Receiver delivered packet with: '" + finalData + "'");
             if (stringMethod.contains("add")) {
                 String[] temp = finalData.split("%");
+                System.out.println("\n\nRouting add data  to the Directory server...");
                 dataHandler.deliverData(temp[1], new String(method), hostAddress, Integer.parseInt(temp[0]));
             } else if(stringMethod.contains("qur")) {
+                System.out.println("\n\nRouting query data to the Directory server...");
                 dataHandler.queryData(finalData, new String(method), hostAddress);
             } else if(stringMethod.contains("lst")) {
+                System.out.println("\n\nRouting the list of files to the p2p client...");
                 dataHandler.deliverList(finalData);
             } else if(stringMethod.contains("get")){
                 String [] temp = finalData.split("#");
+                System.out.println("\n\nRouting get data to the p2p server...");
                 dataHandler.requestFile(temp[1], hostAddress, temp[0]);
             }
             // Resetting whole data to start listening again
@@ -95,7 +99,7 @@ public class RDT10Receiver implements Runnable {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 receivingSocket.receive(packet);
                 packetData = Arrays.copyOf(packet.getData(), packet.getLength());
-                System.out.println("Got Data: " + new String(packetData));
+                System.out.println("Receiver received Data: " + new String(packetData));
                 if (sendAck(packetData, packet)) {
                     byte[] dataToBeDelivered = new byte[packetData.length - 1];
                     System.arraycopy(packetData, 0, dataToBeDelivered, 0, packetData.length - 1);
@@ -127,21 +131,22 @@ public class RDT10Receiver implements Runnable {
             try {
                 DatagramPacket ack = new DatagramPacket(receiverack, receiverack.length, packet.getAddress(), packet.getPort());
                 receivingSocket.send(ack);
-                System.out.println("Receiver Sending Ack: " + new String(receiverack));
+                System.out.println("Receiver sending ACK: " + new String(receiverack));
 
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
+            System.out.println("OOPS Wrong data received...");
             if (new String(receiverack).equals("1")) {
                 DatagramPacket ack = new DatagramPacket(receiverack0, receiverack0.length, packet.getAddress(), packet.getPort());
                 receivingSocket.send(ack);
-                System.out.println("Receiver Sending Ack: " + new String(receiverack0));
+                System.out.println("Receiver Sending ACK: " + new String(receiverack0));
             } else {
                 DatagramPacket ack = new DatagramPacket(receiverack1, receiverack1.length, packet.getAddress(), packet.getPort());
                 receivingSocket.send(ack);
-                System.out.println("Receiver Sending Ack: " + new String(receiverack0));
+                System.out.println("Receiver Sending ACK: " + new String(receiverack0));
             }
         }
 
