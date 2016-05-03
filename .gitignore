@@ -12,11 +12,7 @@ nb-configuration.xml
 refs/remotes/origin/timer
 !/build/
 *.class
-<<<<<<< HEAD
 
 nbproject/private/private.properties
-
-nbproject/private/private.xml
-=======
 *.class
->>>>>>> NilayBranch
+build/classes/edu/ccsu/networking/udp/RDT10Sender.class

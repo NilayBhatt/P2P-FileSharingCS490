@@ -28,7 +28,7 @@ public class Main {
         
         System.out.println(filePath.getSharedFolderPath());
         
-        try {
+//        try {
 //            //Start receiver
 //            receiverThread = new RDT10Receiver("Receiver", 55000);
 //            receiverThread.start();
@@ -54,21 +54,54 @@ public class Main {
 //                Thread.sleep(10000);
 //            }
 
-            server = new TcpServer("serverThread", 2010);
-            server.start();
-        
-            client = new TcpClient("clientThread", 2010);
-            client.start();
-            
-            
+//            server = new TcpServer("192.168.1.5", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
+//            s        
+//            client = new TcpClient("192.168.1.5", 2010);
+//            client.start();
+//            server = new TcpServer("192.168.1.6", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
+//            server.start();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        
+//            client = new TcpClient("192.168.1.5", 2010);
+//            client.start();
+
+//            server = new TcpServer("192.168.1.6", 2010, (filePath.getSharedFolderPath() + "C1-3.txt" ));
+//            server.start();
+
+        
+//            client = new TcpClient("192.168.1.6", 2010);
+//            client.start();
+
+
+            //Start receiver
+            //receiverThread = new RDT10Receiver("Receiver", 55000);
+            //receiverThread.start();
+//            while (true) {
+//                Thread.sleep(1000);
+//            }
+
+            // Create sender
+            //byte[] targetAdddress = {127, 0, 0, 1};
+            //byte[] targetAdddress = {(byte) 192, (byte) 168, (byte) 1, (byte) 8};
+            //RDT10Sender sender = new RDT10Sender();
+//            //sender.startSender(targetAdddress, 55000);
+//            for (int i = 0; i < 10; i++) {
+//                String data = "Here is the message I want to send and I am rebuilding the whole data upon full delivery";
+//                //Adds a way to find end of String Data
+//                data = addTerminatingSeq(data);
+                //Hack for spaces
+                //data = data.replace(" ", "%");
+                // Send the data
+                //sender.rdtSend(data.getBytes(), "add");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
     
-    public static String addTerminatingSeq(String s) {
-        s += " \r\n";
-        return s;
-    }
+//    public static String addTerminatingSeq(String s) {
+//        s += " \r\n";
+//        return s;
+//    }
 }

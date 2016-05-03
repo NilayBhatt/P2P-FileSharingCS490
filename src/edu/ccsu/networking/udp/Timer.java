@@ -29,7 +29,7 @@ public class Timer {
     public Timer() {
         // set up initial values
         timeOutInterval = 1000;
-        estimatedRTT = 900;
+        estimatedRTT = 100;
         sampleRTT = estimatedRTT;
         devRTT = 0;
         startTime = 0;
@@ -54,8 +54,8 @@ public class Timer {
     }
     
     public long updateTimeOutInterval() {
-        long updatedEstRTT = updateEstimatedRTT();
-        float updatedDevRTT = updateDevRTT();
+        this.estimatedRTT = updateEstimatedRTT();
+        this.devRTT = updateDevRTT();
        return this.timeOutInterval = (long) ceil(this.getEstimatedRTT() + 
                 (DEV_WEIGHT * this.devRTT));
     }
@@ -107,16 +107,24 @@ public class Timer {
     /**
      * Needed because system time for timer is long, and setSoTimeout takes int
      * @param value
-     * @return intager value of the long passed in, or the max int value but this
+     * @return integer value of the long passed in, or the max int value but this
      * will probably never be need, but its here.
      * @throws IllegalArgumentException 
      */
     public static int longToInt(long value) throws IllegalArgumentException  {
-    if (value > Integer.MAX_VALUE) {
-        return Integer.MAX_VALUE;
-    } else {
-        return (int) value;
+        if (value > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        } else {
+            return (int) value;
+        }
+    } 
+    
+    public void printTimer() {
+        System.out.println("Timer:");
+        System.out.println("\t timeoutInterval: " + this.timeOutInterval);
+        System.out.println("\t estimatedRTT: " + this.estimatedRTT);
+        System.out.println("\t sampleRTT: " + this.sampleRTT);
+        System.out.println("\t devRTT: " + this.devRTT);
     }
-}  
     
 }

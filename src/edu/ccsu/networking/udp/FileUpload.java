@@ -18,7 +18,7 @@ public class FileUpload {
 
     private String fileName = "";
     private int fileSize = 0;
-    private byte[] hostAddress;
+    private String hostAddress;
     private int port;
 
     
@@ -35,7 +35,7 @@ public class FileUpload {
         this.fileName = fileName;
     }
 
-    public long getFileSize() {
+    public int getFileSize() {
         return fileSize;
     }
 
@@ -43,11 +43,11 @@ public class FileUpload {
         this.fileSize = fileSize;
     }
     
-    public byte[] getHostAddress() {
+    public String getHostAddress() {
         return hostAddress;
     }
 
-    public void setHostAddress(byte[] hostAddress) {
+    public void setHostAddress(String hostAddress) {
         this.hostAddress = hostAddress;
     }
 
@@ -60,7 +60,7 @@ public class FileUpload {
     }
     
     public String toString() {
-        String s = fileName + "*" + fileSize + "\r\n";
+        String s = fileName + "!" + fileSize + "@" + getHostAddress() + "#" +getPort()+ "$";
         
         return s;
     }
