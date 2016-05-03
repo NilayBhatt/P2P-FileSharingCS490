@@ -425,7 +425,7 @@ public class Gui extends javax.swing.JFrame {
         String port = (String)availableDownloadsTable.getModel().getValueAt(row, 3);
         int porting = Integer.parseInt(port) - 2000;
         try {
-            clientLeecher.RequestFileFromClient(fileName, address, Integer.toString(porting));
+            clientLeecher.RequestFileFromClient(fileName, address, port);
             //clientLeecher.RequestFileFromClient(null, null, null, null);
         } catch (IOException ex) {
             Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
@@ -438,7 +438,7 @@ public class Gui extends javax.swing.JFrame {
         String serverIP = clientServerConnect.getText();
         clientLeecher = new Client();
         clientLeecher.setClientSenderPort(4010);
-        clientLeecher.setClientReceiverPort(6010);
+        //clientLeecher.setClientReceiverPort(6010);
         clientLeecher.setServerAddress(serverIP);
         clientLeecher.setServerReceiverPort(2010);
         clientLeecher.startClientSender();
