@@ -232,13 +232,15 @@ public class Client implements DataHandler{
     }
 
     public void RequestFileFromClient(String fileName, String address, String port) throws SocketException, IOException, InterruptedException {
-        String fileRequest = clientReceiverPort + "%" + fileName + "\r\n";
+        int tempPort = Integer.parseInt(port);
+        tempPort = tempPort -2000;
+        String fileRequest = tempPort +"#" + fileName + "\r\n";
         try {
             sender.startSender(address, Integer.parseInt(port));
             sender.rdtSend(fileRequest.getBytes(), "get");
             
             try {
-            TcpClient tcpClient = new TcpClient(address, Integer.parseInt(port), fileName);
+            TcpClient tcpClient = new TcpClient(address, Integer.parseInt(port)-2000, fileName);
             tcpClient.start();
         
             } catch (Exception e) {
@@ -260,6 +262,7 @@ public class Client implements DataHandler{
         // Make/ get the shared folder if not there to specify where all files should be. 
         FilePath filePath = new FilePath();
         filePath.makeSharedDirectory();
+        hostAddress = hostAddress.replace("/", "");
 
         TcpServer tcpServer = new TcpServer(hostAddress, Integer.parseInt(port), (filePath + data));
         tcpServer.start();

@@ -424,6 +424,7 @@ public class Gui extends javax.swing.JFrame {
         address = address.replace("/", "");
         String port = (String)availableDownloadsTable.getModel().getValueAt(row, 3);
         int porting = Integer.parseInt(port) - 2000;
+        clientLeecher.setClientSenderPort(Integer.parseInt(port));
         try {
             clientLeecher.RequestFileFromClient(fileName, address, port);
             //clientLeecher.RequestFileFromClient(null, null, null, null);
