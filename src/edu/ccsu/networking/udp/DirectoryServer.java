@@ -41,7 +41,7 @@ public class DirectoryServer implements DataHandler {
             this.clientPort = clientPort;
             this.serverPort = serverPort;
             serverSender = new RDT10Sender(serverPort);
-            serverSender.startSender(clientAddress, clientPort);
+            serverSender.startSender(clientAddress, clientPort, false);
         } catch (SocketException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownHostException ex) {

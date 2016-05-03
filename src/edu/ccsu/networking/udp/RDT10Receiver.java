@@ -70,7 +70,8 @@ public class RDT10Receiver implements Runnable {
             } else if(stringMethod.contains("lst")) {
                 dataHandler.deliverList(finalData);
             } else if(stringMethod.contains("get")){
-                
+                String [] temp = finalData.split("#");
+                dataHandler.requestFile(temp[1], hostAddress, temp[0]);
             }
             // Resetting whole data to start listening again
             finalData = "";
