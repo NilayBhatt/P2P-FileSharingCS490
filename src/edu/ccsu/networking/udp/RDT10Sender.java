@@ -65,7 +65,7 @@ public class RDT10Sender {
      */
     public void rdtSend(byte[] data, String methodName) throws SocketException, IOException, InterruptedException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
-        double totalPacket = Math.ceil(data.length / 128.0);
+        double totalPacket = Math.ceil(data.length / 128.0) + 1;
         int packetNumber = 1;
         Timer timer = new Timer();
 
@@ -81,7 +81,7 @@ public class RDT10Sender {
             byte[] modPacketData = addAckToData(senderack, packetDataWMethod);
             DatagramPacket packet = new DatagramPacket(modPacketData, modPacketData.length, internetAddress, receiverPortNumber);
             System.out.println("### Sender sending packet: " + new String(packetData) + "'");
-            System.out.println("Packet Number: " + packetNumber + "out of " + totalPacket);
+            System.out.println("\n\nPacket Number: " + packetNumber + " out of " + totalPacket);
             boolean sending = true;
             packetNumber++;
             while (sending) {
@@ -93,7 +93,8 @@ public class RDT10Sender {
                     socket.setSoTimeout((int) timer.getTimeOutInterval());
                     // Minor pause for easier visualization only
                     if (slowMode) {
-                        Thread.sleep(1200);
+                        System.out.println("Slow Mode Started With sleep if 4 seconds");
+                        Thread.sleep(4000);
                     }
                     if (receiveAck()) {
                         //If we got the ack then stop the timer to collect the sample.

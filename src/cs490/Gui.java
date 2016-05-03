@@ -58,7 +58,6 @@ public class Gui extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         fileDataTable = new javax.swing.JTable();
         clientPort = new javax.swing.JTextField();
-        startServerPort = new javax.swing.JTextField();
         startServerButton = new javax.swing.JButton();
         slowMode = new javax.swing.JCheckBox();
         cilentDownloadGui = new javax.swing.JPanel();
@@ -136,8 +135,6 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        startServerPort.setText("Server Port To Start");
-
         startServerButton.setText("Start Server On this Machine");
         startServerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,20 +173,16 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(47, 47, 47)
                         .addComponent(slowMode, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(serverGuiLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(startServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(103, 103, 103)
                         .addComponent(startServerButton)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         serverGuiLayout.setVerticalGroup(
             serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(serverGuiLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(startServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(startServerButton))
-                .addGap(2, 2, 2)
+                .addGap(8, 8, 8)
+                .addComponent(startServerButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(serverGuiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonFileChooser)
                     .addComponent(lableFileChooser))
@@ -442,9 +435,10 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonFileChooserActionPerformed
 
     private void startServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startServerButtonActionPerformed
-        int serverPort = Integer.parseInt(startServerPort.getText());
+        
         server = new DirectoryServer();
-        server.startReceiver(serverPort);
+        server.startReceiver(2010);
+        System.out.println("Directory Server Started With Port no: 2010");
     }//GEN-LAST:event_startServerButtonActionPerformed
 
     private void downloadFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadFileButtonActionPerformed
@@ -571,7 +565,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JCheckBox slowMode;
     private javax.swing.JCheckBox slowMode2;
     private javax.swing.JButton startServerButton;
-    private javax.swing.JTextField startServerPort;
     private javax.swing.JButton syncFiles;
     // End of variables declaration//GEN-END:variables
 

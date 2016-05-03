@@ -48,3 +48,5 @@ build/classes/cs490/Gui$1.class
 *.class
 *.class
 SharedFolder/nilayawesome.png
+*.class
+nbproject/private/private.xml

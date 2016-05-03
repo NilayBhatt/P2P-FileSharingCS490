@@ -79,6 +79,7 @@ public class TcpClient extends Thread {
             }
             
             String httpString = new String(httpStatus).trim();
+            System.out.println(httpString);
             
             switch (Integer.parseInt(httpString)) {
                     case 200:
