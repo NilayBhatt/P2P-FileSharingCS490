@@ -1,3 +1,6 @@
+
+Download the readme.docx for all this with images.
+
 Instructions:
 
 First a user can act as a directory server,  only one is needed, and IP address must be known.  (keeps unwanted people off the network)
