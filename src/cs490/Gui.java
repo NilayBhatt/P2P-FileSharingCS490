@@ -423,8 +423,9 @@ public class Gui extends javax.swing.JFrame {
         String address = (String)availableDownloadsTable.getModel().getValueAt(row, 2);
         address = address.replace("/", "");
         String port = (String)availableDownloadsTable.getModel().getValueAt(row, 3);
+        int porting = Integer.parseInt(port) - 2000;
         try {
-            clientLeecher.RequestFileFromClient(fileName, address, port);
+            clientLeecher.RequestFileFromClient(fileName, address, Integer.toString(porting));
             //clientLeecher.RequestFileFromClient(null, null, null, null);
         } catch (IOException ex) {
             Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
